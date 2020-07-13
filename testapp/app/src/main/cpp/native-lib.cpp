@@ -17,7 +17,7 @@ extern "C" {
 
         clock_t begin = clock();
 
-        cv::adaptiveThreshold(mat, mat, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 21, 5);
+        cv::adaptiveThreshold(mat, mat, 170, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 21, 5);
 
         double totalTime = double(clock() - begin) / CLOCKS_PER_SEC;
         __android_log_print(ANDROID_LOG_INFO, TAG, "adaptiveThreshold computation time = %f seconds\n",
