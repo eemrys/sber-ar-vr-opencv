@@ -13,8 +13,8 @@ object CvCameraViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
 
     override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame): Mat {
 
-        val frame = inputFrame.gray()
-        adaptiveThresholdFromJNI(frame.nativeObjAddr)
+        val frame = inputFrame.rgba()
+        //adaptiveThresholdFromJNI(frame.nativeObjAddr)
         return frame
     }
 
