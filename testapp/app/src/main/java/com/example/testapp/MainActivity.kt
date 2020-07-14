@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.SurfaceView
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,9 +17,15 @@ private const val CAMERA_PERMISSION_REQUEST = 1
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
+    init {
+        initOpenCv()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i(TAG, "called onCreate")
         super.onCreate(savedInstanceState)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         ActivityCompat.requestPermissions(
             this,
@@ -53,7 +60,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         grantResults: IntArray) {
         when (requestCode) {
             CAMERA_PERMISSION_REQUEST -> {
-                val isPermissionGranted = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                val isPermissionGranted = grantResults.isNotEmpty() &&
+                        (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 if (isPermissionGranted) {
                     main_surface.setCameraPermissionGranted()
                 } else {
@@ -66,10 +74,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 Log.e(TAG, "Unexpected permission request")
             }
         }
-    }
-
-    init {
-        initOpenCv()
     }
 
     private fun initOpenCv(){
