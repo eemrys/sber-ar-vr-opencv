@@ -17,6 +17,10 @@ private const val CAMERA_PERMISSION_REQUEST = 1
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
+    private val camera by lazy {
+        CvCameraViewListener
+    }
+
     init {
         initOpenCv()
     }
@@ -33,20 +37,17 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             CAMERA_PERMISSION_REQUEST
         )
 
+        setOnClickListeners()
+
         main_surface.apply {
             visibility = SurfaceView.VISIBLE
-            setCvCameraViewListener(CvCameraViewListener)
+            setCvCameraViewListener(camera)
         }
     }
 
     override fun onPause() {
         super.onPause()
         main_surface.disableView()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        main_surface.enableView()
     }
 
     override fun onDestroy() {
@@ -84,5 +85,39 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private fun initMyNativeLib(){
         System.loadLibrary("native-lib")
+    }
+
+    private fun setOnClickListeners() {
+        btnStart.setOnClickListener {
+            main_surface.enableView()
+            btnStop.isEnabled = true
+            it.isEnabled = false
+
+            clearViewsData()
+        }
+
+        btnStop.setOnClickListener {
+            main_surface.disableView()
+            btnStart.isEnabled = true
+            it.isEnabled = false
+
+            setViewsData()
+        }
+    }
+
+    private fun clearViewsData() {
+        txtvMatrixRes.text = ""
+        txtvDistRes.text = ""
+        txtvRvecsRes.text = ""
+        txtvTvecsRes.text = ""
+    }
+
+    private fun setViewsData() {
+        camera.cameraInfo?.apply {
+            txtvMatrixRes.text = matrix
+            txtvDistRes.text = dist
+            txtvRvecsRes.text = rvecs
+            txtvTvecsRes.text = tvecs
+        }
     }
 }
