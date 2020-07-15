@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">testapp</string>
-    <string name="start">Start</string>
-    <string name="stop">Stop</string>
     <string name="matrix">matrix:</string>
     <string name="tvecs">tvecs:</string>
     <string name="rvecs">rvecs:</string>
     <string name="dist">dist:</string>
+    <string name="get_results">Get Results</string>
+    <string name="clear_results">Clear Results</string>
 </resources>

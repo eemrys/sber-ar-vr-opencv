@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.i(TAG, "called onCreate")
         super.onCreate(savedInstanceState)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -43,6 +42,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             visibility = SurfaceView.VISIBLE
             setCvCameraViewListener(camera)
         }
+
+        btnClear.isEnabled = false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        main_surface.enableView()
     }
 
     override fun onPause() {
@@ -88,32 +94,22 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     }
 
     private fun setOnClickListeners() {
-        btnStart.setOnClickListener {
-            main_surface.enableView()
-            btnStop.isEnabled = true
-            it.isEnabled = false
-
-            clearViewsData()
-        }
-
-        btnStop.setOnClickListener {
+        btnResults.setOnClickListener {
             main_surface.disableView()
-            btnStart.isEnabled = true
+            updateData()
             it.isEnabled = false
-
-            setViewsData()
+            btnClear.isEnabled = true
+        }
+        btnClear.setOnClickListener {
+            main_surface.enableView()
+            updateData()
+            it.isEnabled = false
+            btnResults.isEnabled = true
         }
     }
 
-    private fun clearViewsData() {
-        txtvMatrixRes.text = ""
-        txtvDistRes.text = ""
-        txtvRvecsRes.text = ""
-        txtvTvecsRes.text = ""
-    }
-
-    private fun setViewsData() {
-        camera.cameraInfo?.apply {
+    private fun updateData() {
+        camera.cameraInfo.apply {
             txtvMatrixRes.text = matrix
             txtvDistRes.text = dist
             txtvRvecsRes.text = rvecs

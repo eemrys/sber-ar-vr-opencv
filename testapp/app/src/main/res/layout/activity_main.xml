@@ -10,30 +10,30 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/spacing_normal"
-        app:layout_constraintBottom_toTopOf="@+id/btnStart"
+        app:layout_constraintBottom_toTopOf="@+id/btnResults"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btnStart"
+        android:id="@+id/btnResults"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/spacing_normal"
-        android:text="@string/start"
+        android:text="@string/get_results"
         app:layout_constraintBottom_toTopOf="@+id/txtvMatrixRes"
-        app:layout_constraintEnd_toStartOf="@+id/btnStop"
+        app:layout_constraintEnd_toStartOf="@+id/btnClear"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_surface" />
 
     <Button
-        android:id="@+id/btnStop"
+        android:id="@+id/btnClear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/stop"
-        app:layout_constraintBaseline_toBaselineOf="@+id/btnStart"
+        android:text="@string/clear_results"
+        app:layout_constraintBaseline_toBaselineOf="@+id/btnResults"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnStart" />
+        app:layout_constraintStart_toEndOf="@+id/btnResults" />
 
     <TextView
         android:id="@+id/txtvMatrix"
@@ -44,7 +44,7 @@
         android:text="@string/matrix"
         app:layout_constraintBottom_toTopOf="@+id/txtvDist"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnStart"
+        app:layout_constraintTop_toBottomOf="@+id/btnResults"
         style="@style/TextStyle" />
 
     <TextView
