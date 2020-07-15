@@ -1,6 +1,5 @@
 package com.example.testapp
 
-import android.widget.Toast
 import org.opencv.android.CameraBridgeViewBase
 import org.opencv.calib3d.Calib3d
 import org.opencv.core.*
