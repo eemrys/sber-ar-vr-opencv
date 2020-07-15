@@ -1,7 +1,7 @@
 package com.example.testapp
 
 data class CameraInfo(
-    val matrix: String,
-    val dist: String,
-    val rvecs: String,
-    val tvecs: String)
+    var matrix: String = "",
+    var dist: String = "",
+    var rvecs: String = "",
+    var tvecs: String = "")
