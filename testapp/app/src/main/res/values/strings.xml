@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">testapp</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="matrix">matrix:</string>
+    <string name="tvecs">tvecs:</string>
+    <string name="rvecs">rvecs:</string>
+    <string name="dist">dist:</string>
 </resources>

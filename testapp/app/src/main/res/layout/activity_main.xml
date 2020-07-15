@@ -1,11 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <org.opencv.android.JavaCameraView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/main_surface" />
+        android:id="@+id/main_surface"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        app:layout_constraintBottom_toTopOf="@+id/btnStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        android:text="@string/start"
+        app:layout_constraintBottom_toTopOf="@+id/txtvMatrixRes"
+        app:layout_constraintEnd_toStartOf="@+id/btnStop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_surface" />
+
+    <Button
+        android:id="@+id/btnStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stop"
+        app:layout_constraintBaseline_toBaselineOf="@+id/btnStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnStart" />
+
+    <TextView
+        android:id="@+id/txtvMatrix"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:text="@string/matrix"
+        app:layout_constraintBottom_toTopOf="@+id/txtvDist"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnStart"
+        style="@style/TextStyle" />
+
+    <TextView
+        android:id="@+id/txtvMatrixRes"
+        style="@style/TextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txtvMatrix"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        tools:text="results" />
+
+    <TextView
+        android:id="@+id/txtvDist"
+        style="@style/TextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:text="@string/dist"
+        app:layout_constraintBottom_toTopOf="@+id/txtvRvecs"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtvMatrix" />
+
+    <TextView
+        android:id="@+id/txtvDistRes"
+        style="@style/TextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txtvDist"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        tools:text="results" />
+
+    <TextView
+        android:id="@+id/txtvRvecs"
+        style="@style/TextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:text="@string/rvecs"
+        app:layout_constraintBottom_toTopOf="@+id/txtvTvecs"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtvDist" />
+
+    <TextView
+        android:id="@+id/txtvRvecsRes"
+        style="@style/TextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txtvRvecs"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        tools:text="results" />
+
+    <TextView
+        android:id="@+id/txtvTvecs"
+        style="@style/TextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        android:text="@string/tvecs"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtvRvecs" />
+
+    <TextView
+        android:id="@+id/txtvTvecsRes"
+        style="@style/TextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txtvTvecs"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        tools:text="results" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="64dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
