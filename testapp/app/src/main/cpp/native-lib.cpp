@@ -10,32 +10,36 @@
 #include <opencv2/videoio.hpp>
 #include <opencv2/highgui.hpp>
 
+#include "camera-calibration.h"
+
 using namespace std;
 using namespace cv;
 
-extern "C" {
-    void JNICALL
-    Java_com_example_testapp_CvCameraViewListener_identifyChessboard(
-            JNIEnv *env,jobject instance,jlong matAddr,
-            jint boardWidth, jint boardHeight) {
 
-        vector<Point2f> corners;
+extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_CvCameraViewListener_identifyChessboard(
+            JNIEnv *env,jobject instance,jlong matAddr) {
 
         Mat &frame = *(Mat *) matAddr;
-
-        Size patternSize(boardWidth,boardHeight);
-
-        Mat gray;
-        cvtColor(frame, gray, COLOR_BGR2GRAY);
-
-        bool patternFound = findChessboardCorners(gray, patternSize, corners,
-                CALIB_CB_ADAPTIVE_THRESH + CALIB_CB_NORMALIZE_IMAGE + CALIB_CB_FAST_CHECK);
-
-        if(patternFound) {
-            cornerSubPix(gray, corners, Size(11, 11),
-                         Size(-1, -1),
-                         TermCriteria(TermCriteria::EPS + TermCriteria::COUNT, 30, 0.1));
-        }
-        drawChessboardCorners(frame, patternSize, Mat(corners), patternFound);
+        CameraCalibration::identifyChessboard(frame);
     }
+
+extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_CvCameraViewListener_setSizes(
+        JNIEnv *env,jobject instance,jlong matAddr,
+        jint boardWidth, jint boardHeight, jint squareSize) {
+
+    Mat &frame = *(Mat *) matAddr;
+    Size boardSize(boardWidth, boardHeight);
+    CameraCalibration::setSizes(boardSize, frame.size(), squareSize);
+}
+
+extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_CvCameraViewListener_calibrate(
+        JNIEnv *env,jobject instance, jlong matrix_addr, jlong dist_addr){
+
+    Mat &matrix = *(Mat *) matrix_addr;
+    Mat &dist = *(Mat *) dist_addr;
+
+    vector<Mat> results = CameraCalibration::calibrate();
+
+    matrix = results[0];
+    dist = results[1];
 }
