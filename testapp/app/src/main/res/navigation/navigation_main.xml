@@ -16,7 +16,7 @@
         tools:layout="@layout/fragment_results">
         <argument
             android:name="results"
-            app:argType="com.example.testapp.CameraInfoString"/>
+            app:argType="com.example.testapp.CameraInfo"/>
     </fragment>
 
 </navigation>

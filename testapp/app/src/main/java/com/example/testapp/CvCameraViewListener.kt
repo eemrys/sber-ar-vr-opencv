@@ -10,8 +10,6 @@ object CvCameraViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
     private const val squareSize = 50
     private var sizesSet = false
 
-    private var cameraInfo: CameraInfo = CameraInfo()
-
     override fun onCameraViewStarted(width: Int, height: Int) {}
 
     override fun onCameraViewStopped() {}
@@ -31,10 +29,13 @@ object CvCameraViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
     }
 
     fun calibrateCamera(): CameraInfo {
-        cameraInfo.apply {
-            calibrate(matrix.nativeObjAddr, dist.nativeObjAddr)
-        }
-        return cameraInfo
+
+        val matrixMat = Mat()
+        val distMat = Mat()
+
+        calibrate(matrixMat.nativeObjAddr, distMat.nativeObjAddr)
+
+        return CameraInfo(matrixMat.nativeObjAddr, distMat.nativeObjAddr)
     }
 
     private external fun identifyChessboard(matAddr: Long)

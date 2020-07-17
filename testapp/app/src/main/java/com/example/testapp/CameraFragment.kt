@@ -67,8 +67,7 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     }
 
     private fun navigateToResults(results: CameraInfo) {
-        val args = CameraInfoString(results.matrix.dump(), results.dist.dump())
-        val bundle = bundleOf("results" to args)
+        val bundle = bundleOf("results" to results)
         findNavController().navigate(R.id.fragmentResults, bundle, navOptions)
     }
 }

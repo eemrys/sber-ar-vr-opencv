@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_results.*
+import org.opencv.core.Mat
 
 class ResultsFragment : Fragment(R.layout.fragment_results) {
 
@@ -14,10 +15,12 @@ class ResultsFragment : Fragment(R.layout.fragment_results) {
         postData(arguments.results)
     }
 
-    private fun postData(cameraInfo: CameraInfoString) {
+    private fun postData(cameraInfo: CameraInfo) {
         cameraInfo.apply {
-            txtvMatrixRes.text = matrix
-            txtvDistRes.text = dist
+            val matrixMat = Mat(matrix)
+            val distMat = Mat(dist)
+            txtvMatrixRes.text = matrixMat.dump()
+            txtvDistRes.text = distMat.dump()
         }
     }
 }
