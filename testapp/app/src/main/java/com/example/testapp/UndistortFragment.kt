@@ -1,10 +1,15 @@
 package com.example.testapp
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.SurfaceView
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_undistort.*
+
+private const val CAMERA_PERMISSION_REQUEST = 1
 
 class UndistortFragment : Fragment(R.layout.fragment_undistort) {
 
@@ -16,20 +21,47 @@ class UndistortFragment : Fragment(R.layout.fragment_undistort) {
             val arguments = UndistortFragmentArgs.fromBundle(requireArguments())
             setCvCameraViewListener(UndistortViewListener(arguments.data))
         }
+
+        requestPermissions(arrayOf(Manifest.permission.CAMERA),
+            CAMERA_PERMISSION_REQUEST)
     }
 
     override fun onResume() {
         super.onResume()
-        undistort_surface.enableView()
+        undistort_surface?.enableView()
     }
 
     override fun onPause() {
         super.onPause()
-        undistort_surface.disableView()
+        undistort_surface?.disableView()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        undistort_surface.disableView()
+        undistort_surface?.disableView()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults)
+        when (requestCode) {
+            CAMERA_PERMISSION_REQUEST -> {
+                val isPermissionGranted = grantResults.isNotEmpty() &&
+                        (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                if (isPermissionGranted) {
+                    undistort_surface.setCameraPermissionGranted()
+                } else {
+                    val message = "Camera permission was not granted"
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                }
+            }
+            else -> {
+                val message = "Unexpected permission request"
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            }
+        }
     }
 }

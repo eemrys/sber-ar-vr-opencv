@@ -4,6 +4,7 @@ import org.opencv.android.CameraBridgeViewBase
 import org.opencv.core.Mat
 
 class UndistortViewListener(private val cameraInfo: CameraInfo) : CameraBridgeViewBase.CvCameraViewListener2 {
+
     override fun onCameraViewStarted(width: Int, height: Int) {}
 
     override fun onCameraViewStopped() {}
@@ -11,8 +12,6 @@ class UndistortViewListener(private val cameraInfo: CameraInfo) : CameraBridgeVi
     override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame): Mat {
 
         val frame = inputFrame.rgba()
-        val copyFrame = Mat()
-        frame.copyTo(copyFrame)
 
         cameraInfo.apply {
             val matrixMat = Mat(matrix)
