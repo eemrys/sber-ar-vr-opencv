@@ -14,13 +14,23 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/btnTakeSnapshot"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/take_snapshot"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnCalibrate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_surface" />
+
+    <Button
         android:id="@+id/btnCalibrate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/calibrate"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/btnTakeSnapshot"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_surface" />
+        app:layout_constraintStart_toEndOf="@+id/btnTakeSnapshot" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

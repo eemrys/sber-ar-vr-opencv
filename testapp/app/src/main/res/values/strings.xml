@@ -3,4 +3,5 @@
     <string name="matrix">Camera matrix:</string>
     <string name="dist">Distortion coefficients:</string>
     <string name="calibrate">Calibrate</string>
+    <string name="take_snapshot">Take snapshot</string>
 </resources>

@@ -17,10 +17,10 @@ using namespace cv;
 
 
 extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_CvCameraViewListener_identifyChessboard(
-            JNIEnv *env,jobject instance,jlong matAddr) {
+            JNIEnv *env,jobject instance,jlong matAddr, jboolean mode_take_snapshot) {
 
         Mat &frame = *(Mat *) matAddr;
-        CameraCalibration::identifyChessboard(frame);
+        CameraCalibration::identifyChessboard(frame, reinterpret_cast<bool &>(mode_take_snapshot));
     }
 
 extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_CvCameraViewListener_setSizes(

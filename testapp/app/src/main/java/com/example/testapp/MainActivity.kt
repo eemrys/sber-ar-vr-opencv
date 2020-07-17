@@ -8,10 +8,15 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import kotlinx.android.synthetic.main.fragment_camera.*
+import org.opencv.android.OpenCVLoader
 
 private const val CAMERA_PERMISSION_REQUEST = 1
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
+
+    init {
+        initOpenCv()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,5 +50,14 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun initOpenCv() {
+        val isLoadOpenCVSuccess = OpenCVLoader.initDebug()
+        if(isLoadOpenCVSuccess) initMyNativeLib()
+    }
+
+    private fun initMyNativeLib() {
+        System.loadLibrary("native-lib")
     }
 }

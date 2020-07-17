@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_camera.*
-import org.opencv.android.OpenCVLoader
 
 class CameraFragment : Fragment(R.layout.fragment_camera) {
 
@@ -18,10 +17,6 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     private val navOptions by lazy {
         NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
             .setPopEnterAnim(R.anim.slide_in_left).build()
-    }
-
-    init {
-        initOpenCv()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,19 +45,13 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         main_surface.disableView()
     }
 
-    private fun initOpenCv() {
-        val isLoadOpenCVSuccess = OpenCVLoader.initDebug()
-        if(isLoadOpenCVSuccess) initMyNativeLib()
-    }
-
-    private fun initMyNativeLib() {
-        System.loadLibrary("native-lib")
-    }
-
     private fun setOnClickListeners() {
         btnCalibrate.setOnClickListener {
             val results = camera.calibrateCamera()
             navigateToResults(results)
+        }
+        btnTakeSnapshot.setOnClickListener {
+            camera.takeSnapshot()
         }
     }
 

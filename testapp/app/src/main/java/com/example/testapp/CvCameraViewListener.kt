@@ -9,6 +9,7 @@ object CvCameraViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
     private const val boardHeight = 7
     private const val squareSize = 50
     private var sizesSet = false
+    private var modeTakeSnapshot = false
 
     override fun onCameraViewStarted(width: Int, height: Int) {}
 
@@ -23,9 +24,14 @@ object CvCameraViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
             sizesSet = true
         }
 
-        identifyChessboard(frame.nativeObjAddr)
+        identifyChessboard(frame.nativeObjAddr, modeTakeSnapshot)
+        modeTakeSnapshot = false
 
         return frame
+    }
+
+    fun takeSnapshot() {
+        modeTakeSnapshot = true
     }
 
     fun calibrateCamera(): CameraInfo {
@@ -38,7 +44,7 @@ object CvCameraViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
         return CameraInfo(matrixMat.nativeObjAddr, distMat.nativeObjAddr)
     }
 
-    private external fun identifyChessboard(matAddr: Long)
+    private external fun identifyChessboard(matAddr: Long, modeTakeSnapshot: Boolean)
     private external fun setSizes(matAddr: Long, boardWidth: Int, boardHeight: Int, squareSize: Int)
     private external fun calibrate(matrixAddr: Long, distAddr: Long)
 }

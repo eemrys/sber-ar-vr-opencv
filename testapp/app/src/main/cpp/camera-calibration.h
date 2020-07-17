@@ -22,11 +22,11 @@ private:
     inline static int _squareSize = 0;
     inline static vector<vector<Point2f>> _imagePoints = vector<vector<Point2f>>();
 public:
-    static void setSizes(const Size& boardSize, const Size& imageSize, int squareSize);
+    static void setSizes(const Size& boardSize, const Size& imageSize, int& squareSize);
 
     static void calcBoardCornerPositions(vector<Point3f>& obj);
 
-    static void identifyChessboard(Mat& frame);
+    static void identifyChessboard(Mat& frame, bool& modeTakeSnapshot);
 
     static vector<Mat> calibrate();
 };
