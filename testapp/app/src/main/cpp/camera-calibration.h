@@ -26,7 +26,7 @@ namespace CameraCalibration {
 
     void setSizes(const Size& boardSize, const Size& imageSize, int& squareSize);
 
-    void identifyChessboard(Mat& frame, bool& modeTakeSnapshot);
+    int identifyChessboard(Mat& frame, bool& modeTakeSnapshot);
 
     void calcBoardCornerPositions(vector<Point3f>& obj);
 

@@ -8,6 +8,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.testapp.models.CameraInfo
@@ -31,6 +32,7 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         super.onViewCreated(view, savedInstanceState)
 
         setOnClickListeners()
+        addObserver()
 
         main_surface.apply {
             visibility = SurfaceView.VISIBLE
@@ -89,6 +91,12 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         btnTakeSnapshot.setOnClickListener {
             CvCameraViewListener.takeSnapshot()
         }
+    }
+
+    private fun addObserver() {
+        camera.imagePointsCount.observe(viewLifecycleOwner, Observer {
+            btnCalibrate.isEnabled = it > 3
+        })
     }
 
     private fun navigateToResults(results: CameraInfo) {

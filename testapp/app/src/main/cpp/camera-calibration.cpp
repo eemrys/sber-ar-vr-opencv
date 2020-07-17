@@ -6,7 +6,7 @@ void CameraCalibration::setSizes(const Size& boardSize, const Size& imageSize, i
     _squareSize = squareSize;
 }
 
-void CameraCalibration::identifyChessboard(Mat &frame, bool &modeTakeSnapshot) {
+int CameraCalibration::identifyChessboard(Mat &frame, bool &modeTakeSnapshot) {
 
     vector<Point2f> corners;
     corners.clear();
@@ -20,12 +20,14 @@ void CameraCalibration::identifyChessboard(Mat &frame, bool &modeTakeSnapshot) {
         cornerSubPix(gray, corners, Size(11, 11),
                      Size(-1, -1),
                      TermCriteria(TermCriteria::EPS + TermCriteria::COUNT, 30, 0.1));
-        if (modeTakeSnapshot && _imagePoints.size() < 10)
+        if (modeTakeSnapshot && _imagePoints.size() < 15)
         {
             _imagePoints.push_back(corners);
         }
     }
     drawChessboardCorners(frame, _boardSize, Mat(corners), patternFound);
+
+    return _imagePoints.size();
 }
 
 void CameraCalibration::calcBoardCornerPositions(vector<Point3f> &obj) {

@@ -16,11 +16,11 @@ using namespace std;
 using namespace cv;
 
 using namespace CameraCalibration;
-extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_identifyChessboard(
+extern "C" JNIEXPORT jint JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_identifyChessboard(
             JNIEnv *env,jobject instance,jlong matAddr, jboolean mode_take_snapshot) {
 
     Mat &frame = *(Mat *) matAddr;
-    identifyChessboard(frame, reinterpret_cast<bool &>(mode_take_snapshot));
+    return identifyChessboard(frame, reinterpret_cast<bool &>(mode_take_snapshot));
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_setSizes(

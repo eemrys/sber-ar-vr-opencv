@@ -1,5 +1,7 @@
 package com.example.testapp.screencamera
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.testapp.models.CameraInfo
 import org.opencv.android.CameraBridgeViewBase
 import org.opencv.core.*
@@ -11,6 +13,10 @@ object CvCameraViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
     private const val squareSize = 50
     private var sizesSet = false
     private var modeTakeSnapshot = false
+
+    private val _imagePointsCount = MutableLiveData<Int>()
+    val imagePointsCount: LiveData<Int>
+        get() = _imagePointsCount
 
     override fun onCameraViewStarted(width: Int, height: Int) {}
 
@@ -25,7 +31,7 @@ object CvCameraViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
             sizesSet = true
         }
 
-        identifyChessboard(frame.nativeObjAddr, modeTakeSnapshot)
+        _imagePointsCount.postValue(identifyChessboard(frame.nativeObjAddr, modeTakeSnapshot))
         modeTakeSnapshot = false
 
         return frame
@@ -45,7 +51,7 @@ object CvCameraViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
         return CameraInfo(matrixMat.nativeObjAddr, distMat.nativeObjAddr)
     }
 
-    private external fun identifyChessboard(matAddr: Long, modeTakeSnapshot: Boolean)
+    private external fun identifyChessboard(matAddr: Long, modeTakeSnapshot: Boolean): Int
     private external fun setSizes(matAddr: Long, boardWidth: Int, boardHeight: Int, squareSize: Int)
     private external fun calibrate(matrixAddr: Long, distAddr: Long)
 }
