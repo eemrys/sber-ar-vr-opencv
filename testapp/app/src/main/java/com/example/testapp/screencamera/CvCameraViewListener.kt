@@ -6,7 +6,7 @@ import org.opencv.core.*
 
 object CvCameraViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
 
-    private const val boardWidth = 10
+    private const val boardWidth = 11
     private const val boardHeight = 7
     private const val squareSize = 50
     private var sizesSet = false
@@ -21,19 +21,11 @@ object CvCameraViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
         val frame = inputFrame.rgba()
 
         if (!sizesSet) {
-            setSizes(
-                frame.nativeObjAddr,
-                boardWidth,
-                boardHeight,
-                squareSize
-            )
+            setSizes(frame.nativeObjAddr, boardWidth, boardHeight, squareSize)
             sizesSet = true
         }
 
-        identifyChessboard(
-            frame.nativeObjAddr,
-            modeTakeSnapshot
-        )
+        identifyChessboard(frame.nativeObjAddr, modeTakeSnapshot)
         modeTakeSnapshot = false
 
         return frame
@@ -48,15 +40,9 @@ object CvCameraViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
         val matrixMat = Mat()
         val distMat = Mat()
 
-        calibrate(
-            matrixMat.nativeObjAddr,
-            distMat.nativeObjAddr
-        )
+        calibrate(matrixMat.nativeObjAddr, distMat.nativeObjAddr)
 
-        return CameraInfo(
-            matrixMat.nativeObjAddr,
-            distMat.nativeObjAddr
-        )
+        return CameraInfo(matrixMat.nativeObjAddr, distMat.nativeObjAddr)
     }
 
     private external fun identifyChessboard(matAddr: Long, modeTakeSnapshot: Boolean)

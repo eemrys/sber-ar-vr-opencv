@@ -14,22 +14,26 @@
 using namespace cv;
 using namespace std;
 
-class CameraCalibration {
+namespace CameraCalibration {
 
-private:
-    inline static Size _boardSize = Size();
-    inline static Size _imageSize = Size();
-    inline static int _squareSize = 0;
-    inline static vector<vector<Point2f>> _imagePoints = vector<vector<Point2f>>();
-public:
-    static void setSizes(const Size& boardSize, const Size& imageSize, int& squareSize);
+    Size _boardSize = Size();
 
-    static void calcBoardCornerPositions(vector<Point3f>& obj);
+    Size _imageSize = Size();
 
-    static void identifyChessboard(Mat& frame, bool& modeTakeSnapshot);
+    int _squareSize = 0;
 
-    static vector<Mat> calibrate();
-};
+    vector<vector<Point2f>> _imagePoints = vector<vector<Point2f>>();
+
+    void setSizes(const Size& boardSize, const Size& imageSize, int& squareSize);
+
+    void identifyChessboard(Mat& frame, bool& modeTakeSnapshot);
+
+    void calcBoardCornerPositions(vector<Point3f>& obj);
+
+    vector<Mat> calibrate();
+
+    void undistortImage(Mat& frame, Mat& matrix, Mat& dist);
+}
 
 
 #endif //TESTAPP_CAMERA_CALIBRATION_H

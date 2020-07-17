@@ -3,6 +3,7 @@ package com.example.testapp.screencamera
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.core.os.bundleOf
@@ -42,17 +43,17 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
 
     override fun onResume() {
         super.onResume()
-        main_surface?.enableView()
+        main_surface.enableView()
     }
 
     override fun onPause() {
-        super.onPause()
         main_surface?.disableView()
+        super.onPause()
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         main_surface?.disableView()
+        super.onDestroy()
     }
 
     override fun onRequestPermissionsResult(

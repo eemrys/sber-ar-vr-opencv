@@ -16,7 +16,7 @@
         tools:layout="@layout/fragment_results">
         <argument
             android:name="results"
-            app:argType="com.example.testapp.CameraInfo"/>
+            app:argType="com.example.testapp.models.CameraInfo"/>
     </fragment>
 
     <fragment
@@ -25,7 +25,7 @@
         tools:layout="@layout/fragment_undistort">
         <argument
             android:name="data"
-            app:argType="com.example.testapp.CameraInfo"/>
+            app:argType="com.example.testapp.models.CameraInfo"/>
     </fragment>
 
 </navigation>

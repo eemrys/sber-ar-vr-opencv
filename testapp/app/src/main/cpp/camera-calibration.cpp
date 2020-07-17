@@ -1,10 +1,9 @@
 #include "camera-calibration.h"
 
-void CameraCalibration::calcBoardCornerPositions(vector<Point3f> &obj) {
-    obj.clear();
-    for( int i = 0; i < _boardSize.height; ++i )
-        for( int j = 0; j < _boardSize.width; ++j )
-            obj.emplace_back(j*_squareSize, i*_squareSize, 0);
+void CameraCalibration::setSizes(const Size& boardSize, const Size& imageSize, int& squareSize) {
+    _boardSize = boardSize;
+    _imageSize = imageSize;
+    _squareSize = squareSize;
 }
 
 void CameraCalibration::identifyChessboard(Mat &frame, bool &modeTakeSnapshot) {
@@ -29,6 +28,13 @@ void CameraCalibration::identifyChessboard(Mat &frame, bool &modeTakeSnapshot) {
     drawChessboardCorners(frame, _boardSize, Mat(corners), patternFound);
 }
 
+void CameraCalibration::calcBoardCornerPositions(vector<Point3f> &obj) {
+    obj.clear();
+    for( int i = 0; i < _boardSize.height; ++i )
+        for( int j = 0; j < _boardSize.width; ++j )
+            obj.emplace_back(j*_squareSize, i*_squareSize, 0);
+}
+
 vector<Mat> CameraCalibration::calibrate() {
     float grid_width = (float)_squareSize * (_boardSize.width - 1.f);
     vector<vector<Point3f>> objectPoints(1);
@@ -49,8 +55,7 @@ vector<Mat> CameraCalibration::calibrate() {
     return results;
 }
 
-void CameraCalibration::setSizes(const Size& boardSize, const Size& imageSize, int& squareSize) {
-    _boardSize = boardSize;
-    _imageSize = imageSize;
-    _squareSize = squareSize;
+void CameraCalibration::undistortImage(Mat& frame, Mat& matrix, Mat& dist) {
+    Mat temp = frame.clone();
+    undistort(temp, frame, matrix, dist);
 }

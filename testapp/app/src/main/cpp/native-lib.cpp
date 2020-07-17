@@ -15,31 +15,41 @@
 using namespace std;
 using namespace cv;
 
-
-extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_CvCameraViewListener_identifyChessboard(
+using namespace CameraCalibration;
+extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_identifyChessboard(
             JNIEnv *env,jobject instance,jlong matAddr, jboolean mode_take_snapshot) {
 
-        Mat &frame = *(Mat *) matAddr;
-        CameraCalibration::identifyChessboard(frame, reinterpret_cast<bool &>(mode_take_snapshot));
-    }
+    Mat &frame = *(Mat *) matAddr;
+    identifyChessboard(frame, reinterpret_cast<bool &>(mode_take_snapshot));
+}
 
-extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_CvCameraViewListener_setSizes(
+extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_setSizes(
         JNIEnv *env,jobject instance,jlong matAddr,
         jint boardWidth, jint boardHeight, jint squareSize) {
 
     Mat &frame = *(Mat *) matAddr;
     Size boardSize(boardWidth, boardHeight);
-    CameraCalibration::setSizes(boardSize, frame.size(), squareSize);
+    setSizes(boardSize, frame.size(), squareSize);
 }
 
-extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_CvCameraViewListener_calibrate(
+extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_calibrate(
         JNIEnv *env,jobject instance, jlong matrix_addr, jlong dist_addr){
 
     Mat &matrix = *(Mat *) matrix_addr;
     Mat &dist = *(Mat *) dist_addr;
 
-    vector<Mat> results = CameraCalibration::calibrate();
+    vector<Mat> results = calibrate();
 
     matrix = results[0];
     dist = results[1];
+}
+
+extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screenundistort_UndistortViewListener_undistort(
+        JNIEnv *env,jobject instance,jlong matAddr, jlong matrix_addr, jlong dist_addr) {
+
+    Mat &frame = *(Mat *) matAddr;
+    Mat &matrix = *(Mat *) matrix_addr;
+    Mat &dist = *(Mat *) dist_addr;
+
+    undistortImage(frame, matrix, dist);
 }

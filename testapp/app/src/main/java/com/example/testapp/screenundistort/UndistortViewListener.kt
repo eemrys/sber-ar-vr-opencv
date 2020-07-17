@@ -15,12 +15,11 @@ class UndistortViewListener(private val cameraInfo: CameraInfo) : CameraBridgeVi
         val frame = inputFrame.rgba()
 
         cameraInfo.apply {
-            val matrixMat = Mat(matrix)
-            val distMat = Mat(dist)
+            undistort(frame.nativeObjAddr, matrix, dist)
         }
 
         return frame
     }
 
-    //private external fun calibrate(matrixAddr: Long, distAddr: Long)
+    private external fun undistort(frameAddr: Long, matrixAddr: Long, distAddr: Long)
 }
