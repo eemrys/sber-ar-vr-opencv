@@ -1,4 +1,4 @@
-package com.example.testapp
+package com.example.testapp.screencamera
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -9,6 +9,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.example.testapp.models.CameraInfo
+import com.example.testapp.R
 import kotlinx.android.synthetic.main.fragment_camera.*
 
 private const val CAMERA_PERMISSION_REQUEST = 1
@@ -34,7 +36,8 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
             setCvCameraViewListener(camera)
         }
         requestPermissions(arrayOf(Manifest.permission.CAMERA),
-            CAMERA_PERMISSION_REQUEST)
+            CAMERA_PERMISSION_REQUEST
+        )
     }
 
     override fun onResume() {
@@ -78,11 +81,12 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
 
     private fun setOnClickListeners() {
         btnCalibrate.setOnClickListener {
-            val results = camera.calibrateCamera()
+            val results =
+                CvCameraViewListener.calibrateCamera()
             navigateToResults(results)
         }
         btnTakeSnapshot.setOnClickListener {
-            camera.takeSnapshot()
+            CvCameraViewListener.takeSnapshot()
         }
     }
 

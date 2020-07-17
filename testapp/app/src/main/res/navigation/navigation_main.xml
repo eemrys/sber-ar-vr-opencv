@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/fragmentCamera"
-        android:name="com.example.testapp.CameraFragment"
+        android:name="com.example.testapp.screencamera.CameraFragment"
         tools:layout="@layout/fragment_camera" />
 
     <fragment
         android:id="@+id/fragmentResults"
-        android:name="com.example.testapp.ResultsFragment"
+        android:name="com.example.testapp.screenresults.ResultsFragment"
         tools:layout="@layout/fragment_results">
         <argument
             android:name="results"
@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/fragmentUndistort"
-        android:name="com.example.testapp.UndistortFragment"
+        android:name="com.example.testapp.screenundistort.UndistortFragment"
         tools:layout="@layout/fragment_undistort">
         <argument
             android:name="data"

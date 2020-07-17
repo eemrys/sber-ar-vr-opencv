@@ -1,5 +1,6 @@
-package com.example.testapp
+package com.example.testapp.screenundistort
 
+import com.example.testapp.models.CameraInfo
 import org.opencv.android.CameraBridgeViewBase
 import org.opencv.core.Mat
 

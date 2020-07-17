@@ -1,4 +1,4 @@
-package com.example.testapp
+package com.example.testapp.screenundistort
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -7,6 +7,8 @@ import android.view.SurfaceView
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.testapp.R
+import com.example.testapp.UndistortFragmentArgs
 import kotlinx.android.synthetic.main.fragment_undistort.*
 
 private const val CAMERA_PERMISSION_REQUEST = 1
@@ -18,12 +20,19 @@ class UndistortFragment : Fragment(R.layout.fragment_undistort) {
 
         undistort_surface.apply {
             visibility = SurfaceView.VISIBLE
-            val arguments = UndistortFragmentArgs.fromBundle(requireArguments())
-            setCvCameraViewListener(UndistortViewListener(arguments.data))
+            val arguments = UndistortFragmentArgs.fromBundle(
+                requireArguments()
+            )
+            setCvCameraViewListener(
+                UndistortViewListener(
+                    arguments.data
+                )
+            )
         }
 
         requestPermissions(arrayOf(Manifest.permission.CAMERA),
-            CAMERA_PERMISSION_REQUEST)
+            CAMERA_PERMISSION_REQUEST
+        )
     }
 
     override fun onResume() {

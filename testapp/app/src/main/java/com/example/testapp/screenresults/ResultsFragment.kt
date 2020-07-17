@@ -1,12 +1,14 @@
-package com.example.testapp
+package com.example.testapp.screenresults
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.example.testapp.models.CameraInfo
+import com.example.testapp.R
+import com.example.testapp.ResultsFragmentArgs
 import kotlinx.android.synthetic.main.fragment_results.*
 import org.opencv.core.Mat
 
