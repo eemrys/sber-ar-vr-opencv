@@ -19,4 +19,13 @@
             app:argType="com.example.testapp.CameraInfo"/>
     </fragment>
 
+    <fragment
+        android:id="@+id/fragmentUndistort"
+        android:name="com.example.testapp.UndistortFragment"
+        tools:layout="@layout/fragment_undistort">
+        <argument
+            android:name="data"
+            app:argType="com.example.testapp.CameraInfo"/>
+    </fragment>
+
 </navigation>
