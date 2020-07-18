@@ -8,8 +8,8 @@ import org.opencv.core.*
 
 object CvCameraViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
 
-    private const val boardWidth = 11
-    private const val boardHeight = 7
+    private const val boardWidth = 10
+    private const val boardHeight = 6
     private const val squareSize = 50
     private var sizesSet = false
     private var modeTakeSnapshot = false
