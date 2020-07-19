@@ -3,7 +3,6 @@ package com.example.testapp.screenundistort
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.SurfaceView
 import android.view.View
 import android.widget.Toast
@@ -15,16 +14,21 @@ private const val CAMERA_PERMISSION_REQUEST = 1
 
 class UndistortFragment : Fragment(R.layout.fragment_undistort) {
 
+    private val camera by lazy {
+        UndistortViewListener
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val arguments = UndistortFragmentArgs.fromBundle(requireArguments()).data
+
         undistort_surface.apply {
             visibility = SurfaceView.VISIBLE
-            val arguments = UndistortFragmentArgs.fromBundle(
-                requireArguments()
-            )
-            setCvCameraViewListener(UndistortViewListener(arguments.data))
+            setCvCameraViewListener(camera)
         }
+
+        camera.cameraInfo = arguments
 
         requestPermissions(arrayOf(Manifest.permission.CAMERA),
             CAMERA_PERMISSION_REQUEST
@@ -44,7 +48,6 @@ class UndistortFragment : Fragment(R.layout.fragment_undistort) {
     override fun onDestroy() {
         super.onDestroy()
         undistort_surface?.disableView()
-        Log.i("haha", "ondestroy second fragment")
     }
 
     override fun onRequestPermissionsResult(

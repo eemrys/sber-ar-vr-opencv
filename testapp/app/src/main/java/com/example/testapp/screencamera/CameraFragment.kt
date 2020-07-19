@@ -3,16 +3,15 @@ package com.example.testapp.screencamera
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.testapp.models.CameraInfo
 import com.example.testapp.R
+import com.example.testapp.screenresults.ResultsFragmentArgs
 import kotlinx.android.synthetic.main.fragment_camera.*
 
 private const val CAMERA_PERMISSION_REQUEST = 1
@@ -100,7 +99,7 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     }
 
     private fun navigateToResults(results: CameraInfo) {
-        val bundle = bundleOf("results" to results)
-        findNavController().navigate(R.id.fragmentResults, bundle, navOptions)
+        val args = ResultsFragmentArgs.Builder(results).build().toBundle()
+        findNavController().navigate(R.id.fragmentResults, args, navOptions)
     }
 }

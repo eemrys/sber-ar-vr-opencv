@@ -2,19 +2,19 @@ package com.example.testapp.screenresults
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.testapp.R
 import com.example.testapp.models.CameraInfo
+import com.example.testapp.screenundistort.UndistortFragmentArgs
 import kotlinx.android.synthetic.main.fragment_results.*
 import org.opencv.core.Mat
 
 class ResultsFragment : Fragment(R.layout.fragment_results) {
 
     private val arguments by lazy {
-        ResultsFragmentArgs.fromBundle(requireArguments())
+        ResultsFragmentArgs.fromBundle(requireArguments()).results
     }
 
     private val navOptions by lazy {
@@ -27,12 +27,12 @@ class ResultsFragment : Fragment(R.layout.fragment_results) {
 
         setOnClick()
 
-        postData(arguments.results)
+        postData(arguments)
     }
 
     private fun setOnClick() {
         btnUndistort.setOnClickListener {
-            navigateToUndistort(arguments.results)
+            navigateToUndistort(arguments)
         }
     }
 
@@ -46,7 +46,7 @@ class ResultsFragment : Fragment(R.layout.fragment_results) {
     }
 
     private fun navigateToUndistort(data: CameraInfo) {
-        val bundle = bundleOf("data" to data)
-        findNavController().navigate(R.id.fragmentUndistort, bundle, navOptions)
+        val args = UndistortFragmentArgs.Builder(data).build().toBundle()
+        findNavController().navigate(R.id.fragmentUndistort, args, navOptions)
     }
 }

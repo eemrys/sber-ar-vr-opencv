@@ -8,15 +8,15 @@ import org.opencv.core.*
 
 object CvCameraViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
 
-    private const val boardWidth = 10
-    private const val boardHeight = 6
+    private const val boardWidth = 12
+    private const val boardHeight = 7
     private const val squareSize = 50
     private var sizesSet = false
     private var modeTakeSnapshot = false
 
-    private val _imagePointsCount = MutableLiveData<Int>()
+    private val mutableImagePointsCount = MutableLiveData<Int>()
     val imagePointsCount: LiveData<Int>
-        get() = _imagePointsCount
+        get() = mutableImagePointsCount
 
     override fun onCameraViewStarted(width: Int, height: Int) {}
 
@@ -31,7 +31,7 @@ object CvCameraViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
             sizesSet = true
         }
 
-        _imagePointsCount.postValue(identifyChessboard(frame.nativeObjAddr, modeTakeSnapshot))
+        mutableImagePointsCount.postValue(identifyChessboard(frame.nativeObjAddr, modeTakeSnapshot))
         modeTakeSnapshot = false
 
         return frame
