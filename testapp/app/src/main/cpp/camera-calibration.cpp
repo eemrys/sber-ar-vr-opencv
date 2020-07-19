@@ -20,8 +20,12 @@ int CameraCalibration::identifyChessboard(Mat &frame, bool &modeTakeSnapshot) {
         cornerSubPix(gray, corners, Size(11, 11),
                      Size(-1, -1),
                      TermCriteria(TermCriteria::EPS + TermCriteria::COUNT, 30, 0.1));
-        if (modeTakeSnapshot && _imagePoints.size() < 15)
+        if (modeTakeSnapshot)
         {
+            if (_imagePoints.size() > 10) {
+                _imagePoints.front() = move(_imagePoints.back());
+                _imagePoints.pop_back();
+            }
             _imagePoints.push_back(corners);
         }
     }
