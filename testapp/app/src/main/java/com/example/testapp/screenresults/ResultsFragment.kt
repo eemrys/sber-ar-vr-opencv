@@ -9,7 +9,6 @@ import com.example.testapp.R
 import com.example.testapp.models.CameraInfo
 import com.example.testapp.screenundistort.UndistortFragmentArgs
 import kotlinx.android.synthetic.main.fragment_results.*
-import org.opencv.core.Mat
 
 class ResultsFragment : Fragment(R.layout.fragment_results) {
 
@@ -38,10 +37,8 @@ class ResultsFragment : Fragment(R.layout.fragment_results) {
 
     private fun postData(data: CameraInfo) {
         data.apply {
-            val matrixMat = Mat(matrix)
-            val distMat = Mat(dist)
-            txtvMatrixRes.text = matrixMat.dump()
-            txtvDistRes.text = distMat.dump()
+            txtvMatrixRes.text = matDump
+            txtvDistRes.text = distDump
         }
     }
 

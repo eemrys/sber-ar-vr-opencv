@@ -4,5 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize data class CameraInfo(
-    var matrix: Long,
-    var dist: Long) : Parcelable
+    val matrix: Long,
+    val dist: Long,
+    val matDump: String,
+    val distDump: String) : Parcelable

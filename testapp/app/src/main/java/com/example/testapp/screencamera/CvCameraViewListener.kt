@@ -48,7 +48,11 @@ object CvCameraViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
 
         calibrate(matrixMat.nativeObjAddr, distMat.nativeObjAddr)
 
-        return CameraInfo(matrixMat.nativeObjAddr, distMat.nativeObjAddr)
+        return CameraInfo(
+            matrixMat.nativeObjAddr,
+            distMat.nativeObjAddr,
+            matrixMat.dump(),
+            distMat.dump())
     }
 
     private external fun identifyChessboard(matAddr: Long, modeTakeSnapshot: Boolean): Int
