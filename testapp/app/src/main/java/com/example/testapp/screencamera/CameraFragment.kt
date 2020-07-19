@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.testapp.models.CameraInfo
 import com.example.testapp.R
 import com.example.testapp.screenresults.ResultsFragmentArgs
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_camera.*
 
 private const val CAMERA_PERMISSION_REQUEST = 1
@@ -19,6 +20,7 @@ private const val CAMERA_PERMISSION_REQUEST = 1
 class CameraFragment : Fragment(R.layout.fragment_camera) {
 
     private val camera by lazy {
+        Snackbar.make(this.requireView(), "Take a few pictures with identified chessboard.", Snackbar.LENGTH_LONG).show()
         CvCameraViewListener
     }
 
@@ -83,12 +85,11 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
 
     private fun setOnClickListeners() {
         btnCalibrate.setOnClickListener {
-            val results =
-                CvCameraViewListener.calibrateCamera()
+            val results = camera.calibrateCamera()
             navigateToResults(results)
         }
         btnTakeSnapshot.setOnClickListener {
-            CvCameraViewListener.takeSnapshot()
+            camera.takeSnapshot()
         }
     }
 
