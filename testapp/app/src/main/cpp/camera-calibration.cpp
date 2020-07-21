@@ -22,7 +22,7 @@ int CameraCalibration::identifyChessboard(Mat &frame, bool &modeTakeSnapshot) {
                      TermCriteria(TermCriteria::EPS + TermCriteria::COUNT, 30, 0.1));
         if (modeTakeSnapshot)
         {
-            if (_imagePoints.size() > 10) {
+            if (_imagePoints.size() > 15) {
                 _imagePoints.front() = move(_imagePoints.back());
                 _imagePoints.pop_back();
             }
@@ -53,10 +53,10 @@ vector<Mat> CameraCalibration::calibrate() {
     Mat cameraMatrix = Mat::eye(3, 3, CV_64F);
     Mat distortion = Mat::zeros(8, 1, CV_64F);
 
-    int iFixedPoint = -1;
     vector<Mat> rvecs, tvecs;
-    double rms = calibrateCameraRO(objectPoints, _imagePoints, _imageSize, iFixedPoint,
-                            cameraMatrix, distortion, rvecs, tvecs, newObjPoints);
+    calibrateCamera(objectPoints, _imagePoints, _imageSize,
+                            cameraMatrix, distortion, rvecs, tvecs);
+
     vector<Mat> results {cameraMatrix, distortion};
     return results;
 }
