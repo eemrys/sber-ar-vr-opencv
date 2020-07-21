@@ -164,7 +164,7 @@ This keeps our file relatively short and easier to understand.
 
 ## Java camera portrait mode orientation fix
 
-OpenCV’s camera doesn’t handle a mobile device’s portrait mode well by default. To fix this, we need to modify the CameraBridgeViewBase.java file. There's a function called deliverAndDrawFrame, that takes the camera frame, converts it to a bitmap, and renders that bitmap to an Android canvas on the screen. So before that function gets called, we need to modify the matrix into which all of those pixels get drawn. First we create our matrix:
+OpenCV’s camera doesn’t handle a mobile device’s portrait mode well by default. To fix this, we need to modify the ```CameraBridgeViewBase.java``` file. There's a function called ```deliverAndDrawFrame```, that takes the camera frame, converts it to a bitmap, and renders that bitmap to an Android canvas on the screen. So before that function gets called, we need to modify the matrix into which all of those pixels get drawn. First we create our matrix:
 ```cpp
 private final Matrix mMatrix = new Matrix();
 ```
@@ -218,7 +218,7 @@ And we can now move the matrix back:
    mMatrix.preTranslate(-hw, -hh);
 }
 ```
-For our matrix to be used in the deliverAndDrawFrame method, we need to put this code inside:
+For our matrix to be used, we need to put this code inside the ```deliverAndDrawFrame``` method, before it draws the bitmap:
 ```cpp
 
 canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
@@ -227,13 +227,9 @@ canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
 int saveCount = canvas.save();
 canvas.setMatrix(mMatrix); // using our matrix
 ```
-Now we just need to scale it to fill the width of the screen.We are putting this inside the deliverAndDrawFrame method, before it draws the bitmap:
+Now we just need to scale it to fill the width of the screen:
 ```cpp
 mScale = Math.max((float) canvas.getHeight() / mCacheBitmap.getWidth(), (float) canvas.getWidth() / mCacheBitmap.getHeight());
-```
-However, we also want the image to have a bit of padding, so that we can see the edges of the frame (this way we can fully see the difference after removing distortion).
-```cpp
-mScale -= 0.3f
 ```
 Finally, we need to restore the canvas after bitmap is drawn:
 ```cpp
@@ -256,17 +252,42 @@ The app was tested using Android device emulator. In the first run we set emulat
 
 Virtual simulation test-run:
 
+Identifying the pattern:
 
 ![1-chessboard](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/1-chessboard.png)
 ![2-chessboard](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/2-chessboard.png)
 ![3-chessboard](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/3-chessboard.png)
 ![4-chessboard](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/4-chessboard.png)
 ![5-chessboard](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/5-chessboard.png)
+
+Intrinsic parameters:
+
 ![params](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/6-params.png)
+
+After the distortion removal:
+
 ![7-after](https://github.com/eemrys/sber-ar-vr-opencv/blob/exercise-1-camera-calibration/media/virtual-simulation-testrun/7-after.png)
 ![8-after](https://github.com/eemrys/sber-ar-vr-opencv/blob/exercise-1-camera-calibration/media/virtual-simulation-testrun/8-after.png)
 
 
-Then, we set it to the laptop webcam. As the laptop webcam image is horizontal by default, we won't be rotating it so that it can fill the screen (otherwise the image will be too small).
+Then, we set it to the laptop webcam. As the laptop webcam image is horizontal by default, we won't be rotating it so that it can fill the screen (otherwise the image will be too small). We also want the image to have a bit of padding, so that we can see the edges of the frame (this way we can fully see the difference after removing distortion). So we added this just below our scaling calculation in ```deliverAndDrawFrame```:
+```cpp
+mScale -= 0.3f
+```
 
 Laptop webcam test-run:
+
+Identifying the pattern:
+
+![5-demonstration](https://github.com/eemrys/sber-ar-vr-opencv/blob/exercise-1-camera-calibration/media/laptop-webcam-testrun/5-demonstration.gif?raw=true)
+
+Intrinsic parameters:
+
+![3-params](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun/3-params.png)
+
+Before (left) and after (right) the distortion removal:
+
+![1-before](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun/1-before.png)
+![2-after](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun/2-after.png)
+
+![4-difference](https://github.com/eemrys/sber-ar-vr-opencv/blob/exercise-1-camera-calibration/media/laptop-webcam-testrun/4-diff.gif?raw=true)
