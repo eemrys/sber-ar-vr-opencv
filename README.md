@@ -4,7 +4,8 @@
 1. Camera calibration: basic **theory** and definitions
 2. Using **OpenCV** functions in C++
 3. Communicating between Kotlin and C++ via **JNI**
-4. Results
+4. Java camera portrait mode orientation fix
+5. Results
 
 ## Camera calibration: basic theory and definitions
 
@@ -89,9 +90,172 @@ We will use several OpenCV functions to do the following **to each image**:
     objectPoints.resize(_imagePoints.size(),objectPoints[0]);
     ```
     
-So now we have our object points and image points we are ready perform calibration. For that we use the function **double calibrateCamera(InputArrayOfArrays objectPoints, InputArrayOfArrays imagePoints, Size imageSize, InputOutputArray cameraMatrix, InputOutputArray distCoeffs, OutputArrayOfArrays rvecs, OutputArrayOfArrays tvecs, int flags=0, TermCriteria criteria=TermCriteria( TermCriteria::COUNT+TermCriteria::EPS, 30, DBL_EPSILON))**, which saves camera matrix and distortion coefficients to provided arrays. It also returns rotation ```rvecs``` and translation ```tvecs``` vectors, as well as the final re-projection error, but we won't really need those values. We won't pass any flags to this function, and also use a standart termination criteria for the iterative optimization algorithm.
+So now we have our object points and image points we are ready perform calibration. For that we use the function
+   ```cpp
+   calibrateCamera(objectPoints, _imagePoints, _imageSize,
+                            cameraMatrix, distortion, rvecs, tvecs);
+   ```
+which saves camera matrix and distortion coefficients to provided arrays:
+   ```cpp
+   Mat cameraMatrix = Mat::eye(3, 3, CV_64F);
+   Mat distortion = Mat::zeros(8, 1, CV_64F);
+   ```
+It also returns rotation ```rvecs``` and translation ```tvecs``` vectors, but we won't really need those values.
 
-Finally, now that we got camera's matrix with the distortion coefficients we want to correct the image using undistort function, which transforms an image to compensate radial and tangential lens distortion. **void undistort(InputArray src, OutputArray dst, InputArray cameraMatrix, InputArray distCoeffs, InputArray newCameraMatrix=noArray() )**, where
-    * ```src``` – Input (distorted) image
-    * ```dst``` – Output (corrected) image that has the same size and type as src
-    * ```newCameraMatrix``` – Camera matrix of the distorted image. By default, it is the same as cameraMatrix but you may additionally scale and shift the result by using a different matrix. We will leave the default value here.
+Finally, now that we got camera's matrix with the distortion coefficients we want to correct the image using undistort function, which transforms an image to compensate radial and tangential lens distortion. 
+   ```cpp
+   Mat temp = frame.clone();
+   undistort(temp, frame, matrix, dist);
+   ```
+where
+* ```temp``` – a copy of input (distorted) image
+* ```frame``` – output (corrected) image that has the same size and type as ```temp```
+
+## Communicating between Kotlin and C++ via JNI
+
+Now we need to connect all these functions, that are located in our .cpp file, to our UI logic, written in Kotlin. Here is when we need JNI, the Java Native Interface. It defines a way for the bytecode that Android compiles from managed code (written in the Java or Kotlin programming languages) to interact with native code (written in C/C++).
+
+First we create a listener object for the camera by implementing ```CameraBridgeViewBase.CvCameraViewListener2``` interface. The ```onCameraFrame``` method receives and returns each frame caputred by the camera; here we can proccess and modify each frame before returning it.
+We then need to declare an enternal function, which will refer to our native code in C++, for example:
+```cpp
+private external fun identifyChessboard(matAddr: Long, modeTakeSnapshot: Boolean): Int
+```
+The compiler will look for a function with a specific name using this template:
+```
+Java_packageName_className_funName()
+```
+So in a .cpp file we define this function like this:
+```cpp
+extern "C" JNIEXPORT jint JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_identifyChessboard(
+            JNIEnv *env,jobject instance,jlong matAddr, jboolean mode_take_snapshot) {
+
+    Mat &frame = *(Mat *) matAddr;
+    // call to function in another .cpp file
+    return identifyChessboard(frame, reinterpret_cast<bool &>(mode_take_snapshot));
+}
+```
+Explanation:
+* In order for the JNI to locate out native functions automatically, they have to match the expected function signatures (the template mentioned above) exactly. C++ function names get mangled by the compiler (to support overloading and other things) -- unless you specify extern "C". If you forget the extern declaration, JNI will be unable to find the function 
+* JNIEXPORT is used to make native functions appear in the dynamic table of the built binary (\*.so file). If these functions are not in the dynamic table, JNI will not be able to find the functions to call them so the RegisterNatives call will fail at runtime.
+* JNICALL contains any compiler directives required to ensure that the given function is treated with the proper calling convention.
+
+Now we can pass data between the CvCameraViewListener object and native functions in C++.
+It's probably best to create a separate .cpp file for JNI functions, and keep all OpenCV logic elsewhere. In this app, we have a camera-calibration.cpp and .h files that contain all our functions, and also a native-lib.cpp file that only communicates with CvCameraViewListener:
+```cpp
+#include "camera-calibration.h"
+```
+After we included the header file, we can call these functions from our native-lib file.
+
+```cpp
+extern "C" JNIEXPORT jint JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_identifyChessboard(
+            JNIEnv *env,jobject instance,jlong matAddr, jboolean mode_take_snapshot) {
+    // call to a function from camera-calibration.h
+}
+
+extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_setSizes(
+        JNIEnv *env,jobject instance,jlong matAddr,
+        jint boardWidth, jint boardHeight, jint squareSize) {
+    // call to a function from camera-calibration.h
+}
+...
+
+```
+This keeps our file relatively short and easier to understand.
+
+## Java camera portrait mode orientation fix
+
+OpenCV’s camera doesn’t handle a mobile device’s portrait mode well by default. To fix this, we need to modify the CameraBridgeViewBase.java file. There's a function called deliverAndDrawFrame, that takes the camera frame, converts it to a bitmap, and renders that bitmap to an Android canvas on the screen. So before that function gets called, we need to modify the matrix into which all of those pixels get drawn. First we create our matrix:
+```cpp
+private final Matrix mMatrix = new Matrix();
+```
+We want the matrix to be updated based on various events, so we add a couple of override methods:
+```cpp
+ @Override
+    public void layout(int l, int t, int r, int b) {
+        super.layout(l, t, r, b);
+        updateMatrix();
+    }
+
+ @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        updateMatrix();
+    }
+```
+These call update the matrix when the screen is laid out, and then call to measure for screen dimension changes.
+Finally let's define a function that will update the matrix:
+```cpp
+private void updateMatrix() {
+   float hw = this.getWidth() / 2.0f; // getting basic measurements of the screen
+   float hh = this.getHeight() / 2.0f;
+
+   boolean isFrontCamera = mCameraIndex == CAMERA_ID_FRONT;
+```
+We want to reset the matrix from whatever manipulations occurred in the previous frame.
+```cpp
+   mMatrix.reset();
+```
+   Let's also mirror the front facing camera image:
+```cpp
+   if (isFrontCamera) {
+      mMatrix.preScale(-1, 1, hw, hh); // this will mirror the camera
+   }
+```
+If we were to rotate right now, OpenCV would use the top left corner of the image as its rotation point, which would send the camera image off the screen on the device. So let’s move it to the center:
+```cpp
+   mMatrix.preTranslate(hw, hh);
+```
+   Then we can rotate it, and the angle will depend on whether it's the front or rear camera.
+```cpp
+   if (isFrontCamera){
+      mMatrix.preRotate(270);
+   } else {
+      mMatrix.preRotate(90);
+   }
+   ```
+And we can now move the matrix back:
+```cpp
+   mMatrix.preTranslate(-hw, -hh);
+}
+```
+For our matrix to be used in the deliverAndDrawFrame method, we need to put this code inside:
+```cpp
+
+canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
+// ....original code
+
+int saveCount = canvas.save();
+canvas.setMatrix(mMatrix); // using our matrix
+```
+Now we just need to scale it to fill the width of the screen.We are putting this inside the deliverAndDrawFrame method, before it draws the bitmap:
+```cpp
+mScale = Math.max((float) canvas.getHeight() / mCacheBitmap.getWidth(), (float) canvas.getWidth() / mCacheBitmap.getHeight());
+```
+However, we also want the image to have a bit of padding, so that we can see the edges of the frame (this way we can fully see the difference after removing distortion).
+```cpp
+mScale -= 0.3f
+```
+Finally, we need to restore the canvas after bitmap is drawn:
+```cpp
+// original code
+if (mScale != 0) {
+      ... 
+} else { 
+      ... 
+}
+
+// Restore canvas after drawing bitmap
+canvas.restoreToCount(saveCount);
+
+```
+Note -- this will only work for portrait mode.
+
+## Results
+
+The app was tested using Android device emulator. In the first run we set emulator's rear camera to Virtual Simutation mode. As it is in portrait mode, the rotation modifications from the previous step work as expected.
+
+Virtual simulation test-run:
+
+Then, we set it to the laptop webcam. As the laptop webcam image is horizontal by default, we won't be rotating it so that it can fill the screen (otherwise the image will be too small).
+
+Laptop webcam test-run:
