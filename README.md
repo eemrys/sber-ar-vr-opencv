@@ -256,6 +256,17 @@ The app was tested using Android device emulator. In the first run we set emulat
 
 Virtual simulation test-run:
 
+
+![1-chessboard](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/1-chessboard.png)
+![2-chessboard](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/2-chessboard.png)
+![3-chessboard](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/3-chessboard.png)
+![4-chessboard](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/4-chessboard.png)
+![5-chessboard](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/5-chessboard.png)
+![params](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/6-params.png)
+![7-after](https://github.com/eemrys/sber-ar-vr-opencv/blob/exercise-1-camera-calibration/media/virtual-simulation-testrun/7-after.png)
+![8-after](https://github.com/eemrys/sber-ar-vr-opencv/blob/exercise-1-camera-calibration/media/virtual-simulation-testrun/8-after.png)
+
+
 Then, we set it to the laptop webcam. As the laptop webcam image is horizontal by default, we won't be rotating it so that it can fill the screen (otherwise the image will be too small).
 
 Laptop webcam test-run:
