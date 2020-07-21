@@ -250,7 +250,7 @@ Note -- this will only work for portrait mode.
 
 The app was tested using Android device emulator. In the first run we set emulator's rear camera to Virtual Simutation mode. As it is in portrait mode, the rotation modifications from the previous step work as expected.
 
-Virtual simulation test-run:
+### Virtual simulation test-run
 
 Identifying the pattern:
 
@@ -275,7 +275,7 @@ Then, we set it to the laptop webcam. As the laptop webcam image is horizontal b
 mScale -= 0.3f
 ```
 
-Laptop webcam test-run:
+### Laptop webcam test-run
 
 Identifying the pattern:
 
