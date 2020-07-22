@@ -47,8 +47,8 @@ We will use several OpenCV functions to do the following **to each image**:
 1. As we're using the chessboard pattern in our app, we first need to identify this pattern on an image. To do this, we have to find the positions of internal corners of the chessboard using this function: 
    ```cpp
 
-    bool pattern_found = findChessboardCorners(gray, board_size, corners,
-                                              CALIB_CB_ADAPTIVE_THRESH + CALIB_CB_NORMALIZE_IMAGE + CALIB_CB_FAST_CHECK);
+   bool pattern_found = findChessboardCorners(gray, board_size, corners,
+                                      CALIB_CB_ADAPTIVE_THRESH + CALIB_CB_NORMALIZE_IMAGE + CALIB_CB_FAST_CHECK);
    ```
    where ```board_size``` is the number of inner corners per a chessboard row and column (e.g. 10x6). There are also two operation flags present:
       * ```CALIB_CB_ADAPTIVE_THRESH``` uses adaptive thresholding to convert the image to black and white, rather than a fixed threshold level (computed from the average image brightness).
@@ -154,7 +154,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCamera
     Mat& frame = *(Mat *) mat_addr;
     Size passed_board_size(board_width, board_height);
     
-    // call to a function from camera-calibration.h
+    // call to function from camera-calibration.h
     set_sizes(passed_board_size, frame.size(), passed_square_size);
 }
 ...
