@@ -47,60 +47,60 @@ We will use several OpenCV functions to do the following **to each image**:
 1. As we're using the chessboard pattern in our app, we first need to identify this pattern on an image. To do this, we have to find the positions of internal corners of the chessboard using this function: 
    ```cpp
 
-    bool patternFound = findChessboardCorners(gray, patternSize = _boardSize, corners,
-                           CALIB_CB_ADAPTIVE_THRESH + CALIB_CB_NORMALIZE_IMAGE + CALIB_CB_FAST_CHECK);
+    bool pattern_found = findChessboardCorners(gray, board_size, corners,
+                                              CALIB_CB_ADAPTIVE_THRESH + CALIB_CB_NORMALIZE_IMAGE + CALIB_CB_FAST_CHECK);
    ```
-   where ```patternSize``` is the number of inner corners per a chessboard row and column (e.g. 10x6). There are also two operation flags present:
+   where ```board_size``` is the number of inner corners per a chessboard row and column (e.g. 10x6). There are also two operation flags present:
       * ```CALIB_CB_ADAPTIVE_THRESH``` uses adaptive thresholding to convert the image to black and white, rather than a fixed threshold level (computed from the average image brightness).
       * ```CALIB_CB_NORMALIZE_IMAGE``` normalizes the image gamma with equalizeHist() before applying fixed or adaptive thresholding.
-      * ```CALIB_CB_FAST_CHECK Run``` a fast check on the image that looks for chessboard corners, and shortcut the call if none is found. This can drastically speed up the call in the degenerate condition when no chessboard is observed.
+      * ```CALIB_CB_FAST_CHECK``` runs a fast check on the image that looks for chessboard corners, and shortcut the call if none is found. This can drastically speed up the call in the degenerate condition when no chessboard is observed.
 
 2. Once we find the corners, we can increase their accuracy by refining the corner locations using 
     ```cpp
-    if(patternFound) {
-        cornerSubPix(gray, corners, winsize = Size(11, 11),
-                     zeroZone = Size(-1, -1),
+    if (pattern_found) {
+        cornerSubPix(gray, corners, win_size = Size(11, 11),
+                     zero_zone = Size(-1, -1),
                      criteria = TermCriteria(TermCriteria::EPS + TermCriteria::COUNT, 30, 0.1));
     }
     ```
     where
-    * ```patternFound``` is the return value of the previous function.
-    * ```winSize``` – Half of the side length of the search window. For example, if ```winSize=Size(5,5)``` , then a 5*2+1 x 5*2+1 = 11 x 11 search window is used.
-    * ```zeroZone``` – Half of the size of the dead region in the middle of the search zone over which the summation in the formula below is not done. It is used sometimes to avoid possible singularities of the autocorrelation matrix. The value of (-1,-1) indicates that there is no such a size.
+    * ```pattern_found``` is the return value of the previous function.
+    * ```win_size``` – Half of the side length of the search window. For example, if ```winSize=Size(5,5)``` , then a 5*2+1 x 5*2+1 = 11 x 11 search window is used.
+    * ```zero_zone``` – Half of the size of the dead region in the middle of the search zone over which the summation in the formula below is not done. It is used sometimes to avoid possible singularities of the autocorrelation matrix. The value of (-1,-1) indicates that there is no such a size.
     * ```criteria``` – Criteria for termination of the iterative process of corner refinement. So the process stops either after criteria.maxCount iterations or when the corner position moves by less than criteria.epsilon on some iteration.
 
 3. Then, once the pattern is indentified, we want to draw them on top of the given image. To render the detected chessboard corners we use the function
     ```cpp
-    drawChessboardCorners(frame, _boardSize, Mat(corners), patternFound);
+    drawChessboardCorners(frame, board_size, Mat(corners), pattern_found);
     ```
 4. Finally, for each recognized pattern we need to track:
     * some reference system’s 3D point where the chessboard is located (let’s assume that the Z axe is always 0):
     ```cpp
-    for( int i = 0; i < _boardSize.height; ++i )
-        for( int j = 0; j < _boardSize.width; ++j )
-            obj.emplace_back(j*_squareSize, i*_squareSize, 0);
+    for (int i = 0; i < board_size.height; ++i)
+        for (int j = 0; j < board_size.width; ++j)
+            obj.emplace_back(j * square_size, i * square_size, 0);
     ```
     * the image’s 2D points (output array of the function ```findChessboardCorners```)
     ```cpp
-     _imagePoints.push_back(corners);
+     image_points.push_back(corners);
      ```
-    So we need to save the array of chessboard corners on each iteration to ```_imageCorners```, array and array of 3D points to ```objectPoints```. Because the array of 3D points is the same on each iteration, we are basically creating the ```objectPoints``` array once (using the loop above), and then resize it to fit the ```_imagePoint``` array, as they are supposed to be the same size.
+    So we need to save the array of chessboard corners on each iteration to ```image_points```, and array of 3D points to ```object_points```. Because the array of 3D points is the same on each iteration, we are basically creating the ```objectPoints``` array once (using the loop above), and then resize it to fit the ```image_points``` array, as they are supposed to be the same size.
     ```cpp
-    objectPoints[0][_boardSize.width - 1].x = objectPoints[0][0].x + grid_width;
-    objectPoints.resize(_imagePoints.size(),objectPoints[0]);
+    object_points[0][board_size.width - 1].x = object_points[0][0].x + grid_width;
+    object_points.resize(image_points.size(), object_points[0]);
     ```
     
 So now we have our object points and image points we are ready perform calibration. For that we use the function
    ```cpp
-   calibrateCamera(objectPoints, _imagePoints, _imageSize,
-                            cameraMatrix, distortion, rvecs, tvecs);
+   calibrateCamera(object_points, image_points, image_size,
+                    camera_matrix, dist_coeffs, r_vecs, t_vecs);
    ```
 which saves camera matrix and distortion coefficients to provided arrays:
    ```cpp
-   Mat cameraMatrix = Mat::eye(3, 3, CV_64F);
-   Mat distortion = Mat::zeros(8, 1, CV_64F);
+   Mat camera_matrix = Mat::eye(3, 3, CV_64F);
+   Mat dist_coeffs = Mat::zeros(8, 1, CV_64F);
    ```
-It also returns rotation ```rvecs``` and translation ```tvecs``` vectors, but we won't really need those values.
+It also returns rotation ```r_vecs``` and translation ```t_vecs``` vectors, but we won't really need those values.
 
 Finally, now that we got camera's matrix with the distortion coefficients we want to correct the image using undistort function, which transforms an image to compensate radial and tangential lens distortion. 
    ```cpp
@@ -127,11 +127,11 @@ Java_packageName_className_funName()
 So in a .cpp file we define this function like this:
 ```cpp
 extern "C" JNIEXPORT jint JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_identifyChessboard(
-            JNIEnv *env,jobject instance,jlong matAddr, jboolean mode_take_snapshot) {
+        JNIEnv *env, jobject instance, jlong mat_addr, jboolean mode_take_snapshot) {
 
-    Mat &frame = *(Mat *) matAddr;
+    Mat& frame = *(Mat *) mat_addr;
     // call to function in another .cpp file
-    return identifyChessboard(frame, reinterpret_cast<bool &>(mode_take_snapshot));
+    return identify_chessboard(frame, reinterpret_cast<bool&>(mode_take_snapshot));
 }
 ```
 Explanation:
@@ -142,20 +142,20 @@ Explanation:
 Now we can pass data between the CvCameraViewListener object and native functions in C++.
 It's probably best to create a separate .cpp file for JNI functions, and keep all OpenCV logic elsewhere. In this app, we have a camera-calibration.cpp and .h files that contain all our functions, and also a native-lib.cpp file that only communicates with CvCameraViewListener:
 ```cpp
-#include "camera-calibration.h"
+#include "camera_calibration.h"
 ```
 After we included the header file, we can call these functions from our native-lib file.
 
 ```cpp
-extern "C" JNIEXPORT jint JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_identifyChessboard(
-            JNIEnv *env,jobject instance,jlong matAddr, jboolean mode_take_snapshot) {
-    // call to a function from camera-calibration.h
-}
-
 extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_setSizes(
-        JNIEnv *env,jobject instance,jlong matAddr,
-        jint boardWidth, jint boardHeight, jint squareSize) {
+        JNIEnv *env, jobject instance, jlong mat_addr,
+        jint board_width, jint board_height, jint passed_square_size) {
+
+    Mat& frame = *(Mat *) mat_addr;
+    Size passed_board_size(board_width, board_height);
+    
     // call to a function from camera-calibration.h
+    set_sizes(passed_board_size, frame.size(), passed_square_size);
 }
 ...
 
