@@ -254,20 +254,20 @@ The app was tested using Android device emulator. In the first run we set emulat
 
 Identifying the pattern:
 
-![1-chessboard](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/1-chessboard.png)
-![2-chessboard](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/2-chessboard.png)
-![3-chessboard](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/3-chessboard.png)
-![4-chessboard](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/4-chessboard.png)
-![5-chessboard](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/5-chessboard.png)
+![1-chessboard](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/1-chessboard.png)
+![2-chessboard](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/2-chessboard.png)
+![3-chessboard](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/3-chessboard.png)
+![4-chessboard](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/4-chessboard.png)
+![5-chessboard](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/5-chessboard.png)
 
 Intrinsic parameters:
 
-![params](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/6-params.png)
+![params](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/6-params.png)
 
 After the distortion removal:
 
-![7-after](https://github.com/eemrys/sber-ar-vr-opencv/blob/exercise-1-camera-calibration/media/virtual-simulation-testrun/7-after.png)
-![8-after](https://github.com/eemrys/sber-ar-vr-opencv/blob/exercise-1-camera-calibration/media/virtual-simulation-testrun/8-after.png)
+![7-after](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/7-after.png)
+![8-after](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/virtual-simulation-testrun/8-after.png)
 
 
 Then, we set it to the laptop webcam. As the laptop webcam image is horizontal by default, we won't be rotating it so that it can fill the screen (otherwise the image will be too small). We also want the image to have a bit of padding, so that we can see the edges of the frame (this way we can fully see the difference after removing distortion). So we added this just below our scaling calculation in ```deliverAndDrawFrame```:
@@ -279,15 +279,15 @@ mScale -= 0.3f
 
 Identifying the pattern:
 
-![5-demonstration](https://github.com/eemrys/sber-ar-vr-opencv/blob/exercise-1-camera-calibration/media/laptop-webcam-testrun/5-demonstration.gif?raw=true)
+![5-demonstration](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun/5-demonstration.gif)
 
 Intrinsic parameters:
 
-![3-params](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun/3-params.png)
+![3-params](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun/3-params.png)
 
 Before (left) and after (right) the distortion removal:
 
-![1-before](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun/1-before.png)
-![2-after](https://raw.githubusercontent.com/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun/2-after.png)
+![1-before](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun/1-before.png)
+![2-after](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun/2-after.png)
 
-![4-difference](https://github.com/eemrys/sber-ar-vr-opencv/blob/exercise-1-camera-calibration/media/laptop-webcam-testrun/4-diff.gif?raw=true)
+![4-difference](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun/4-diff.gif)
