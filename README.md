@@ -216,7 +216,6 @@ If we were to rotate right now, OpenCV would use the top left corner of the imag
 And we can now move the matrix back:
 ```java
    mMatrix.preTranslate(-hw, -hh);
-}
 ```
 For our matrix to be used, we need to put this code inside the ```deliverAndDrawFrame``` method, before it draws the bitmap:
 ```java
