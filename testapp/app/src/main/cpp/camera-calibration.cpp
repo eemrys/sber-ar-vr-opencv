@@ -22,11 +22,9 @@ int CameraCalibration::identifyChessboard(Mat &frame, bool &modeTakeSnapshot) {
                      TermCriteria(TermCriteria::EPS + TermCriteria::COUNT, 30, 0.1));
         if (modeTakeSnapshot)
         {
-            if (_imagePoints.size() > 15) {
-                _imagePoints.front() = move(_imagePoints.back());
-                _imagePoints.pop_back();
+            if (_imagePoints.size() < 20) {
+                _imagePoints.push_back(corners);
             }
-            _imagePoints.push_back(corners);
         }
     }
     drawChessboardCorners(frame, _boardSize, Mat(corners), patternFound);

@@ -469,6 +469,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
                 canvas.setMatrix(mMatrix);
 
                 mScale = Math.max((float) canvas.getHeight() / mCacheBitmap.getWidth(), (float) canvas.getWidth() / mCacheBitmap.getHeight());
+                mScale -= 0.3f;
 
                 if (mScale != 0) {
                     canvas.drawBitmap(mCacheBitmap, new Rect(0,0,mCacheBitmap.getWidth(), mCacheBitmap.getHeight()),
