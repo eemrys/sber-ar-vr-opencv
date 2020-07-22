@@ -135,9 +135,9 @@ extern "C" JNIEXPORT jint JNICALL Java_com_example_testapp_screencamera_CvCamera
 }
 ```
 Explanation:
-* In order for the JNI to locate out native functions automatically, they have to match the expected function signatures (the template mentioned above) exactly. C++ function names get mangled by the compiler (to support overloading and other things) -- unless you specify extern "C". If you forget the extern declaration, JNI will be unable to find the function 
-* JNIEXPORT is used to make native functions appear in the dynamic table of the built binary (\*.so file). If these functions are not in the dynamic table, JNI will not be able to find the functions to call them so the RegisterNatives call will fail at runtime.
-* JNICALL contains any compiler directives required to ensure that the given function is treated with the proper calling convention.
+* In order for the JNI to locate out native functions automatically, they have to match the expected function signatures (the template mentioned above) exactly. C++ function names get mangled by the compiler (to support overloading and other things) -- unless you specify ```extern "C"```. If you forget the extern declaration, JNI will be unable to find the function 
+* ```JNIEXPORT``` is used to make native functions appear in the dynamic table of the built binary (\*.so file). If these functions are not in the dynamic table, JNI will not be able to find the functions to call them so the RegisterNatives call will fail at runtime.
+* ```JNICALL``` contains any compiler directives required to ensure that the given function is treated with the proper calling convention.
 
 Now we can pass data between the CvCameraViewListener object and native functions in C++.
 It's probably best to create a separate .cpp file for JNI functions, and keep all OpenCV logic elsewhere. In this app, we have a camera-calibration.cpp and .h files that contain all our functions, and also a native-lib.cpp file that only communicates with CvCameraViewListener:
