@@ -117,7 +117,7 @@ Now we need to connect all these functions, that are located in our .cpp file, t
 
 First we create a listener object for the camera by implementing ```CameraBridgeViewBase.CvCameraViewListener2``` interface. The ```onCameraFrame``` method receives and returns each frame caputred by the camera; here we can proccess and modify each frame before returning it.
 We then need to declare an enternal function, which will refer to our native code in C++, for example:
-```cpp
+```kotlin
 private external fun identifyChessboard(matAddr: Long, modeTakeSnapshot: Boolean): Int
 ```
 The compiler will look for a function with a specific name using this template:
@@ -165,11 +165,11 @@ This keeps our file relatively short and easier to understand.
 ## Java camera portrait mode orientation fix
 
 OpenCV’s camera doesn’t handle a mobile device’s portrait mode well by default. To fix this, we need to modify the ```CameraBridgeViewBase.java``` file. There's a function called ```deliverAndDrawFrame```, that takes the camera frame, converts it to a bitmap, and renders that bitmap to an Android canvas on the screen. So before that function gets called, we need to modify the matrix into which all of those pixels get drawn. First we create our matrix:
-```cpp
+```java
 private final Matrix mMatrix = new Matrix();
 ```
 We want the matrix to be updated based on various events, so we add a couple of override methods:
-```cpp
+```java
  @Override
     public void layout(int l, int t, int r, int b) {
         super.layout(l, t, r, b);
@@ -184,7 +184,7 @@ We want the matrix to be updated based on various events, so we add a couple of 
 ```
 These call update the matrix when the screen is laid out, and then call to measure for screen dimension changes.
 Finally let's define a function that will update the matrix:
-```cpp
+```java
 private void updateMatrix() {
    float hw = this.getWidth() / 2.0f; // getting basic measurements of the screen
    float hh = this.getHeight() / 2.0f;
@@ -192,21 +192,21 @@ private void updateMatrix() {
    boolean isFrontCamera = mCameraIndex == CAMERA_ID_FRONT;
 ```
 We want to reset the matrix from whatever manipulations occurred in the previous frame.
-```cpp
+```java
    mMatrix.reset();
 ```
    Let's also mirror the front facing camera image:
-```cpp
+```java
    if (isFrontCamera) {
       mMatrix.preScale(-1, 1, hw, hh); // this will mirror the camera
    }
 ```
 If we were to rotate right now, OpenCV would use the top left corner of the image as its rotation point, which would send the camera image off the screen on the device. So let’s move it to the center:
-```cpp
+```java
    mMatrix.preTranslate(hw, hh);
 ```
    Then we can rotate it, and the angle will depend on whether it's the front or rear camera.
-```cpp
+```java
    if (isFrontCamera){
       mMatrix.preRotate(270);
    } else {
@@ -214,12 +214,12 @@ If we were to rotate right now, OpenCV would use the top left corner of the imag
    }
    ```
 And we can now move the matrix back:
-```cpp
+```java
    mMatrix.preTranslate(-hw, -hh);
 }
 ```
 For our matrix to be used, we need to put this code inside the ```deliverAndDrawFrame``` method, before it draws the bitmap:
-```cpp
+```java
 
 canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
 // ....original code
@@ -228,11 +228,11 @@ int saveCount = canvas.save();
 canvas.setMatrix(mMatrix); // using our matrix
 ```
 Now we just need to scale it to fill the width of the screen:
-```cpp
+```java
 mScale = Math.max((float) canvas.getHeight() / mCacheBitmap.getWidth(), (float) canvas.getWidth() / mCacheBitmap.getHeight());
 ```
 Finally, we need to restore the canvas after bitmap is drawn:
-```cpp
+```java
 // original code
 if (mScale != 0) {
       ... 
@@ -271,7 +271,7 @@ After the distortion removal:
 
 
 Then, we set it to the laptop webcam. As the laptop webcam image is horizontal by default, we won't be rotating it so that it can fill the screen (otherwise the image will be too small). We also want the image to have a bit of padding, so that we can see the edges of the frame (this way we can fully see the difference after removing distortion). So we added this just below our scaling calculation in ```deliverAndDrawFrame```:
-```cpp
+```java
 mScale -= 0.3f
 ```
 
