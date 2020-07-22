@@ -290,3 +290,29 @@ Before (left) and after (right) the distortion removal:
 ![2-after](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun/2-after.png)
 
 ![4-difference](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun/4-diff.gif)
+
+As you can see, the resulting image appears to be even more distorted than the original. This is because in our test-run we neglected the guidelines regarding taking the pictures that the calibration algorithm will use. This part of the calibration process is almost the most important one.
+
+When collecting calibration images it is best to make sure to move the pattern everywhere in frame, so that you get a diverse set of in focus images which cover the entire frame, especially **the frame border**. The goal is to cover the entire field of view at each distance as much as possible.
+
+The amout of pictures matters as well.  Previously, we were only taking about 10 pictures, which is not enough. In the second test-run we will be taking 20 pictures with the pattern in every possible position, from different points of view and distances.
+
+But if the more pictures the better, why not take 40 or even a hundred? There is a significant processing time difference between 20 and 40 pictures, and we don't want our app to be too slow or freeze, so we'll settle for 20 frames for now.
+
+
+### Laptop webcam test-run 2 (distortion fix)
+
+Identifying the pattern:
+
+![5-demonstration](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun-fix/5-demonstration.gif)
+
+Intrinsic parameters:
+
+![3-params](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun-fix/3-params.png)
+
+Before (left) and after (right) the distortion removal:
+
+![1-before](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun-fix/1-before.png)
+![2-after](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun-fix/2-after.png)
+
+![4-difference](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-1-camera-calibration/media/laptop-webcam-testrun-fix/4-diff.gif)
