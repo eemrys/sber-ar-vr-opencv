@@ -17,11 +17,11 @@ object UndistortViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
         val frame = inputFrame.rgba()
 
         cameraInfo?.apply {
-            undistort(frame.nativeObjAddr, matrix, dist)
+            detectArucoMarker(frame.nativeObjAddr, matrix, dist)
         }
 
         return frame
     }
 
-    private external fun undistort(frameAddr: Long, matrixAddr: Long, distAddr: Long)
+    private external fun detectArucoMarker(frameAddr: Long, matrixAddr: Long, distAddr: Long)
 }

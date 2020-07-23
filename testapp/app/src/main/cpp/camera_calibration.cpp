@@ -60,7 +60,15 @@ vector<Mat> cameracalibration::calibrate() {
     return results;
 }
 
-void cameracalibration::undistort_image(Mat& frame, const Mat& matrix, const Mat& dist) {
-    Mat temp = frame.clone();
-    undistort(temp, frame, matrix, dist);
+void cameracalibration::detect_aruco_marker(Mat& frame, const Mat& matrix, const Mat& dist) {
+    vector<int> marker_ids;
+    vector<vector<Point2f>> marker_corners;
+    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
+    Mat copy;
+    frame.copyTo(copy);
+    cvtColor(frame, copy, COLOR_BGR2GRAY);
+    aruco::detectMarkers(copy, dictionary, marker_corners, marker_ids);
+    if (!marker_ids.empty()) {
+        aruco::drawDetectedMarkers(copy, marker_corners, marker_ids);
+    }
 }

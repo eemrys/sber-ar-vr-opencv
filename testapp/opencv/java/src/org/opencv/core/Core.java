@@ -107,6 +107,16 @@ public class Core {
             DCT_ROWS = DFT_ROWS;
 
 
+    // C++: enum CovarFlags
+    public static final int
+            COVAR_SCRAMBLED = 0,
+            COVAR_NORMAL = 1,
+            COVAR_USE_AVG = 2,
+            COVAR_SCALE = 4,
+            COVAR_ROWS = 8,
+            COVAR_COLS = 16;
+
+
     // C++: enum <unnamed>
     public static final int
             SVD_MODIFY_A = 1,
@@ -119,16 +129,6 @@ public class Core {
             REDUCE_MIN = 3,
             RNG_UNIFORM = 0,
             RNG_NORMAL = 1;
-
-
-    // C++: enum CovarFlags
-    public static final int
-            COVAR_SCRAMBLED = 0,
-            COVAR_NORMAL = 1,
-            COVAR_USE_AVG = 2,
-            COVAR_SCALE = 4,
-            COVAR_ROWS = 8,
-            COVAR_COLS = 16;
 
 
     // C++: enum SortFlags

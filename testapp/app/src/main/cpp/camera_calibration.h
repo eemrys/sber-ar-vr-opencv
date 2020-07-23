@@ -10,6 +10,7 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/videoio.hpp>
 #include <opencv2/highgui.hpp>
+#include <opencv2/aruco.hpp>
 
 using namespace cv;
 using namespace std;
@@ -32,7 +33,7 @@ namespace cameracalibration {
 
     vector<Mat> calibrate();
 
-    void undistort_image(Mat& frame, const Mat& matrix, const Mat& dist);
+    void detect_aruco_marker(Mat& frame, const Mat& matrix, const Mat& dist);
 }
 
 

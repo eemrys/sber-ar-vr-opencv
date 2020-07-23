@@ -17,18 +17,18 @@ public class AgastFeatureDetector extends Feature2D {
     // internal usage only
     public static AgastFeatureDetector __fromPtr__(long addr) { return new AgastFeatureDetector(addr); }
 
-    // C++: enum <unnamed>
-    public static final int
-            THRESHOLD = 10000,
-            NONMAX_SUPPRESSION = 10001;
-
-
     // C++: enum DetectorType
     public static final int
             AGAST_5_8 = 0,
             AGAST_7_12d = 1,
             AGAST_7_12s = 2,
             OAST_9_16 = 3;
+
+
+    // C++: enum <unnamed>
+    public static final int
+            THRESHOLD = 10000,
+            NONMAX_SUPPRESSION = 10001;
 
 
     //
