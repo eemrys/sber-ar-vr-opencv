@@ -64,11 +64,16 @@ void cameracalibration::detect_aruco_marker(Mat& frame, const Mat& matrix, const
     vector<int> marker_ids;
     vector<vector<Point2f>> marker_corners;
     Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
-    Mat copy;
-    frame.copyTo(copy);
-    cvtColor(frame, copy, COLOR_BGR2GRAY);
-    aruco::detectMarkers(copy, dictionary, marker_corners, marker_ids);
+    cvtColor(frame, frame, COLOR_RGBA2RGB);
+    aruco::detectMarkers(frame, dictionary, marker_corners, marker_ids);
     if (!marker_ids.empty()) {
-        aruco::drawDetectedMarkers(copy, marker_corners, marker_ids);
+        aruco::drawDetectedMarkers(frame, marker_corners, marker_ids);
+
+        vector<Vec3d> r_vecs, t_vecs;
+        aruco::estimatePoseSingleMarkers(marker_corners, 0.05, matrix, dist, r_vecs, t_vecs);
+
+        // draw axis for each marker
+        for (int i = 0; i < marker_ids.size(); ++i)
+            aruco::drawAxis(frame, matrix, dist, r_vecs[i], t_vecs[i], 0.1);
     }
 }
