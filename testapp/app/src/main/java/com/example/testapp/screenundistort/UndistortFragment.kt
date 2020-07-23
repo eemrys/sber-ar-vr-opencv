@@ -7,6 +7,7 @@ import android.view.SurfaceView
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.example.testapp.R
 import kotlinx.android.synthetic.main.fragment_undistort.*
 
@@ -21,18 +22,17 @@ class UndistortFragment : Fragment(R.layout.fragment_undistort) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val arguments = UndistortFragmentArgs.fromBundle(requireArguments()).data
-
         undistort_surface.apply {
             visibility = SurfaceView.VISIBLE
             setCvCameraViewListener(camera)
         }
 
+        val arguments = UndistortFragmentArgs.fromBundle(requireArguments()).data
         camera.cameraInfo = arguments
 
-        requestPermissions(arrayOf(Manifest.permission.CAMERA),
-            CAMERA_PERMISSION_REQUEST
-        )
+        requestPermissions(arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST)
+
+        addObserver()
     }
 
     override fun onResume() {
@@ -72,5 +72,13 @@ class UndistortFragment : Fragment(R.layout.fragment_undistort) {
                 Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun addObserver() {
+        camera.distance.observe(viewLifecycleOwner, Observer {
+            if (it > 0) {
+                txtvDistance.text = it.toString()
+            }
+        })
     }
 }

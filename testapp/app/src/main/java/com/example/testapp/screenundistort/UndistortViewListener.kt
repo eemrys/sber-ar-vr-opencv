@@ -1,5 +1,7 @@
 package com.example.testapp.screenundistort
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.testapp.models.CameraInfo
 import org.opencv.android.CameraBridgeViewBase
 import org.opencv.core.Mat
@@ -7,6 +9,10 @@ import org.opencv.core.Mat
 object UndistortViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
 
     var cameraInfo: CameraInfo? = null
+
+    private val mutableDistance = MutableLiveData<Double>()
+    val distance: LiveData<Double>
+        get() = mutableDistance
 
     override fun onCameraViewStarted(width: Int, height: Int) {}
 
@@ -17,11 +23,11 @@ object UndistortViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
         val frame = inputFrame.rgba()
 
         cameraInfo?.apply {
-            detectArucoMarker(frame.nativeObjAddr, matrix, dist)
+            mutableDistance.postValue(detectArucoMarker(frame.nativeObjAddr, matrix, dist))
         }
 
         return frame
     }
 
-    private external fun detectArucoMarker(frameAddr: Long, matrixAddr: Long, distAddr: Long)
+    private external fun detectArucoMarker(frameAddr: Long, matrixAddr: Long, distAddr: Long): Double
 }
