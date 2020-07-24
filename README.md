@@ -1,6 +1,6 @@
 # Estimating extrinsic parameters with ArUco markers
 
-Overview:
+## Overview:
 1. Introduction to ArUco markers
 2. Detecting ArUco markers
 3. Estimating camera pose
@@ -132,9 +132,6 @@ distance_marker = norm(t_vecs[0]);
 As for the second value, we'll have to do a bit of math.
 To get the distance between the camera and the marker surface, we need to get the position of our camera in reference to the marker, i.e. in its coordinate system. The Z coordinate of the camera **is** the value we're looking for.
 
-Ok, you should have a translation vector, and a rotation vector for each detected tag. These are relative to the camera coordinate system.
-Getting the position of your camera in reference to the marker is easy. It's the inverse of the translation vector aka multiply by -1. This is still in the coordinate system of your camera, so it'll change with the camera rotation.
-
 First, we need to get the rotation matrix from the rotation vector. We can do it with ```Rodrigues``` function:
 ```cpp
 Mat rotation_matrix;
@@ -151,6 +148,7 @@ distance_surface = camera_translation_vector.at<double>(0,2);
 ```
 
 Here we display both of these values:
+
 ![screen6](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-2-extrinsic-parameters/media/screen6.png)
 
 ## Results
