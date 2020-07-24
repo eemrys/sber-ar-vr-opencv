@@ -112,7 +112,7 @@ aruco::drawAxis(frame, matrix, dist, r_vecs[0], t_vecs[0], marker_length * 2.f);
 * ```r_vecs[0]``` and ```t_vecs[0]``` are the pose parameters for the marker whose axis is to be drawn. Since we only have one marker in this app, we just need to retrieve the first (and only) values of both these vectors. If you use several markers in your application, you will need to iterate through the ```marker_ids``` vector, and call this function on each iteration.
 * The last parameter is the length of the axis, in the same unit as ```marker_length``` (usually meters).
 
-Below images shows the output of this code.
+Below images show the output of this code.
 
 ![screen3](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-2-extrinsic-parameters/media/screen3.png)
 ![screen4](https://media.githubusercontent.com/media/eemrys/sber-ar-vr-opencv/exercise-2-extrinsic-parameters/media/screen4.png)
@@ -125,12 +125,12 @@ In this app we want to get two values:
 * the distance between the camera and the **surface** of the marker.
 
 Earlier we obtained the rotation and the translation vectors.
-Norm of the translation vector **is** the distance between the tag frame and the camera frame.
+Norm of the translation vector is the distance between the tag frame and the camera frame.
 ```cpp
 distance_marker = norm(t_vecs[0]);
 ```
 As for the second value, we'll have to do a bit of math.
-To get the distance between the camera and the marker surface, we need to get the position of our camera in reference to the marker, i.e. in its coordinate system. The Z coordinate of the camera **is** the value we're looking for.
+To get the distance between the camera and the marker surface, we need to get the position of our camera in reference to the marker, i.e. in its coordinate system. The Z coordinate of the camera is the value we're looking for.
 
 First, we need to get the rotation matrix from the rotation vector. We can do it with ```Rodrigues``` function:
 ```cpp
