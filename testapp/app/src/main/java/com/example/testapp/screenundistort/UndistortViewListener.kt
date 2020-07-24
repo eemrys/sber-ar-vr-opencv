@@ -10,8 +10,8 @@ object UndistortViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
 
     var cameraInfo: CameraInfo? = null
 
-    private val mutableDistance = MutableLiveData<List<Double>>()
-    val distance: LiveData<List<Double>>
+    private val mutableDistance = MutableLiveData<DoubleArray>()
+    val distance: LiveData<DoubleArray>
         get() = mutableDistance
 
     override fun onCameraViewStarted(width: Int, height: Int) {}
@@ -21,20 +21,13 @@ object UndistortViewListener : CameraBridgeViewBase.CvCameraViewListener2 {
     override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame): Mat {
 
         val frame = inputFrame.rgba()
-        val distanceMarker = 0.0
-        val distanceSurface = 0.0
 
         cameraInfo?.apply {
-            detectArucoMarker(frame.nativeObjAddr, matrix, dist, distanceMarker, distanceSurface)
+            mutableDistance.postValue(detectArucoMarker(frame.nativeObjAddr, matrix, dist))
         }
 
-        mutableDistance.value = listOf(distanceMarker, distanceSurface)
         return frame
     }
 
-    private external fun detectArucoMarker(frameAddr: Long,
-                                           matrixAddr: Long,
-                                           distAddr: Long,
-                                           distanceMarker: Double,
-                                           distanceSurface: Double)
+    private external fun detectArucoMarker(frameAddr: Long, matrixAddr: Long, distAddr: Long) : DoubleArray
 }
