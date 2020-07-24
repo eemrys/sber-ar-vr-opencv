@@ -67,11 +67,9 @@ vector<double> cameracalibration::detect_aruco_marker(Mat& frame, const Mat& mat
 
     vector<int> marker_ids;
     vector<vector<Point2f>> marker_corners;
-
     Ptr<aruco::DetectorParameters> parameters = aruco::DetectorParameters::create();
-    parameters->cornerRefinementMethod = aruco::CORNER_REFINE_CONTOUR;
-    parameters->adaptiveThreshConstant=true;
     Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
+
     cvtColor(frame, frame, COLOR_RGBA2BGR);
 
     aruco::detectMarkers(frame, dictionary, marker_corners, marker_ids, parameters);
