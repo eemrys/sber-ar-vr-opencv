@@ -76,9 +76,8 @@ class UndistortFragment : Fragment(R.layout.fragment_undistort) {
 
     private fun addObserver() {
         camera.distance.observe(viewLifecycleOwner, Observer {
-            if (it > 0) {
-                txtvDistance.text = it.toString()
-            }
+            txtvDistanceMarker.text = it[0].toString()
+            txtvDistanceSurface.text = it[1].toString()
         })
     }
 }

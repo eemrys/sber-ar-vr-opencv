@@ -60,28 +60,35 @@ vector<Mat> cameracalibration::calibrate() {
     return results;
 }
 
-double cameracalibration::detect_aruco_marker(Mat& frame, const Mat& matrix, const Mat& dist) {
-    double distance = 0;
+vector<double> cameracalibration::detect_aruco_marker(Mat& frame, const Mat& matrix, const Mat& dist) {
+    double distance_marker = 0;
+    double distance_surface = 0;
     float marker_length = 0.05f;
+
     vector<int> marker_ids;
     vector<vector<Point2f>> marker_corners;
+
     Ptr<aruco::DetectorParameters> parameters = aruco::DetectorParameters::create();
     parameters->cornerRefinementMethod = aruco::CORNER_REFINE_CONTOUR;
     parameters->adaptiveThreshConstant=true;
     Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
     cvtColor(frame, frame, COLOR_RGBA2RGB);
+
     aruco::detectMarkers(frame, dictionary, marker_corners, marker_ids, parameters);
+
     if (!marker_ids.empty()) {
         aruco::drawDetectedMarkers(frame, marker_corners, marker_ids);
 
         vector<Vec3d> r_vecs, t_vecs;
         aruco::estimatePoseSingleMarkers(marker_corners, marker_length, matrix, dist, r_vecs, t_vecs);
 
-        // draw axis for each marker
+        // draw axis for each marker (we only have one in this app)
         for (int i = 0; i < marker_ids.size(); ++i) {
             aruco::drawAxis(frame, matrix, dist, r_vecs[i], t_vecs[i], marker_length * 2.f);
-            distance = norm(t_vecs[i]);
+            distance_marker = norm(t_vecs[i]);
+            distance_surface = norm(t_vecs[i]);
         }
     }
-    return distance;
+    vector<double> results {distance_marker, distance_surface};
+    return results;
 }

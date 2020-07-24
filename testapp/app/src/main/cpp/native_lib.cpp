@@ -44,12 +44,18 @@ extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCamera
     dist = results[1];
 }
 
-extern "C" JNIEXPORT jdouble JNICALL Java_com_example_testapp_screenundistort_UndistortViewListener_detectArucoMarker(
-        JNIEnv *env, jobject instance, jlong mat_addr, jlong matrix_addr, jlong dist_addr) {
+extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screenundistort_UndistortViewListener_detectArucoMarker(
+        JNIEnv *env, jobject instance, jlong mat_addr, jlong matrix_addr, jlong dist_addr,
+        jdouble distance_marker_passed, jdouble distance_surface_passed) {
 
     Mat& frame = *(Mat *) mat_addr;
     Mat& matrix = *(Mat *) matrix_addr;
     Mat& dist = *(Mat *) dist_addr;
+    double& distance_marker = distance_marker_passed;
+    double& distance_surface = distance_surface_passed;
 
-    return detect_aruco_marker(frame, matrix, dist);
+    vector<double> results = detect_aruco_marker(frame, matrix, dist);
+
+    distance_marker = results[0];
+    distance_surface = results[1];
 }

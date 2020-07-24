@@ -10,25 +10,51 @@
         android:id="@+id/undistort_surface"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/txtvDistance"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/txtvDistanceMarkerText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtvDistance"
+        android:id="@+id/txtvDistanceMarkerText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:fontFamily="sans-serif-condensed-light"
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textColor="#000000"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/txtvDistanceMarker"
+        app:layout_constraintEnd_toStartOf="@id/txtvDistanceSurfaceText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/undistort_surface"
+        android:text="@string/distance_to_marker"
+        style="@style/SecondaryTextStyle" />
+
+    <TextView
+        android:id="@+id/txtvDistanceSurfaceText"
+        style="@style/SecondaryTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txtvDistanceMarkerText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/txtvDistanceMarkerText"
+        android:text="@string/distance_to_surface" />
+
+    <TextView
+        android:id="@+id/txtvDistanceMarker"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/txtvDistanceSurface"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtvDistanceMarkerText"
+        tools:text="TextView"
+        style="@style/SecondaryTextStyle" />
+
+    <TextView
+        android:id="@+id/txtvDistanceSurface"
+        style="@style/SecondaryTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txtvDistanceMarker"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/txtvDistanceMarker"
         tools:text="TextView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

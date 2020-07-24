@@ -33,7 +33,7 @@ namespace cameracalibration {
 
     vector<Mat> calibrate();
 
-    double detect_aruco_marker(Mat& frame, const Mat& matrix, const Mat& dist);
+    vector<double> detect_aruco_marker(Mat& frame, const Mat& matrix, const Mat& dist);
 }
 
 

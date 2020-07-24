@@ -4,7 +4,7 @@
     <string name="dist">Distortion coefficients:</string>
     <string name="calibrate">Calibrate</string>
     <string name="take_snapshot">Take snapshot</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="correct_camera_distortion">Correct camera distortion</string>
+    <string name="estimate_extrinsic_parameters">estimate extrinsic parameters</string>
+    <string name="distance_to_marker">distance to marker:</string>
+    <string name="distance_to_surface">distance to surface:</string>
 </resources>
