@@ -12,33 +12,31 @@
 
 #include "camera_calibration.h"
 
-using namespace std;
-using namespace cv;
-using namespace cameracalibration;
+CameraCalibration camera_calibration = CameraCalibration();
 
 extern "C" JNIEXPORT jint JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_identifyChessboard(
         JNIEnv *env, jobject instance, jlong mat_addr, jboolean mode_take_snapshot) {
 
-    Mat& frame = *(Mat *) mat_addr;
-    return identify_chessboard(frame, reinterpret_cast<bool&>(mode_take_snapshot));
+    cv::Mat& frame = *(cv::Mat *) mat_addr;
+    return camera_calibration.identify_chessboard(frame, reinterpret_cast<bool&>(mode_take_snapshot));
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_setSizes(
         JNIEnv *env, jobject instance, jlong mat_addr,
         jint board_width, jint board_height, jint passed_square_size) {
 
-    Mat& frame = *(Mat *) mat_addr;
-    Size passed_board_size(board_width, board_height);
-    set_sizes(passed_board_size, frame.size(), passed_square_size);
+    cv::Mat& frame = *(cv::Mat *) mat_addr;
+    cv::Size passed_board_size(board_width, board_height);
+    camera_calibration.set_sizes(passed_board_size, frame.size(), passed_square_size);
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_calibrate(
         JNIEnv *env,jobject instance, jlong matrix_addr, jlong dist_addr){
 
-    Mat& matrix = *(Mat *) matrix_addr;
-    Mat& dist = *(Mat *) dist_addr;
+    cv::Mat& matrix = *(cv::Mat *) matrix_addr;
+    cv::Mat& dist = *(cv::Mat *) dist_addr;
 
-    vector<Mat> results = calibrate();
+    std::vector<cv::Mat> results = camera_calibration.calibrate();
 
     matrix = results[0];
     dist = results[1];
@@ -47,9 +45,9 @@ extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCamera
 extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screenundistort_UndistortViewListener_undistort(
         JNIEnv *env, jobject instance, jlong mat_addr, jlong matrix_addr, jlong dist_addr) {
 
-    Mat& frame = *(Mat *) mat_addr;
-    Mat& matrix = *(Mat *) matrix_addr;
-    Mat& dist = *(Mat *) dist_addr;
+    cv::Mat& frame = *(cv::Mat *) mat_addr;
+    cv::Mat& matrix = *(cv::Mat *) matrix_addr;
+    cv::Mat& dist = *(cv::Mat *) dist_addr;
 
-    undistort_image(frame, matrix, dist);
+    CameraCalibration::undistort_image(frame, matrix, dist);
 }
