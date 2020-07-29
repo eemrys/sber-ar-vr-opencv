@@ -140,15 +140,17 @@ Explanation:
 * ```JNICALL``` contains any compiler directives required to ensure that the given function is treated with the proper calling convention.
 
 Now we can pass data between the CvCameraViewListener object and native functions in C++.
-It's probably best to create a separate .cpp file for JNI functions, and keep all OpenCV logic elsewhere. In this app, we have a ```CameraCalibration``` class in ```camera_calibration.cpp``` and ```.h``` files that contains all our functions, and also a ```native_lib.cpp``` file that only communicates with ```CvCameraViewListener```:
+It's probably best to create a separate .cpp file for JNI functions, and keep all OpenCV logic elsewhere. In this app, we have a ```CameraCalibration``` class in ```camera_calibration.cpp``` and ```.h``` files that contains all our functions, and also a ```native_lib.cpp``` file that only communicates with ```CvCameraViewListener```.
+After we include the header file,
 ```cpp
 #include "camera_calibration.h"
 ```
-After we included the header file, we can create an instance of this class as a global variable in ```native_lib``` file and call needed functions from this file:
-
+we can create an instance of this class as a global variable in ```native_lib``` file
 ```cpp
 CameraCalibration camera_calibration = CameraCalibration();
-
+```
+and call needed functions from this file:
+```cpp
 extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_setSizes(
         JNIEnv *env, jobject instance, jlong mat_addr,
         jint board_width, jint board_height, jint passed_square_size) {
