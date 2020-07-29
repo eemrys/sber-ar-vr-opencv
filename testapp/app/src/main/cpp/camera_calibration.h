@@ -12,23 +12,25 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/aruco.hpp>
 
-using namespace cv;
-using namespace std;
-
 class CameraCalibration {
-private:
-    Size board_size;
-    Size image_size;
-    int square_size;
-    vector<vector<Point2f>> image_points;
-public:
-    CameraCalibration();
-    void set_sizes(const Size& board, const Size& image, int square);
-    int identify_chessboard(Mat& frame, bool mode_take_snapshot);
-    void calc_board_corner_positions(vector<Point3f>& obj);
-    vector<Mat> calibrate();
-    static vector<double> detect_aruco_marker(Mat& frame, const Mat& matrix, const Mat& dist);
-};
 
+private:
+    cv::Size board_size;
+    cv::Size image_size;
+    int square_size;
+    std::vector<std::vector<cv::Point2f> > image_points;
+public:
+    CameraCalibration():
+        board_size(cv::Size()),
+        image_size(cv::Size()),
+        square_size(0),
+        image_points(std::vector<std::vector<cv::Point2f> >())
+        {};
+    void set_sizes(const cv::Size& board, const cv::Size& image, const int square);
+    int identify_chessboard(cv::Mat& frame, const bool mode_take_snapshot);
+    void calc_board_corner_positions(std::vector<cv::Point3f>& obj);
+    std::vector<cv::Mat> calibrate();
+    static std::vector<double> detect_aruco_marker(cv::Mat& frame, const cv::Mat& matrix, const cv::Mat& dist);
+};
 
 #endif //TESTAPP_CAMERA_CALIBRATION_H
