@@ -141,15 +141,16 @@ Explanation:
 
 Now we can pass data between the CvCameraViewListener object and native functions in C++.
 It's probably best to create a separate .cpp file for JNI functions, and keep all OpenCV logic elsewhere. In this app, we have a ```CameraCalibration``` class in ```camera_calibration.cpp``` and ```.h``` files that contains all our functions, and also a ```native_lib.cpp``` file that only communicates with ```CvCameraViewListener```.
+
 After we include the header file,
 ```cpp
 #include "camera_calibration.h"
 ```
-we can create an instance of this class as a global variable in ```native_lib``` file
+we create an instance of this class as a global variable in ```native_lib``` file
 ```cpp
 CameraCalibration camera_calibration = CameraCalibration();
 ```
-and call needed functions from this file:
+and call needed functions on this variable:
 ```cpp
 extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_setSizes(
         JNIEnv *env, jobject instance, jlong mat_addr,
