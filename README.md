@@ -131,7 +131,7 @@ extern "C" JNIEXPORT jint JNICALL Java_com_example_testapp_screencamera_CvCamera
 
     Mat& frame = *(Mat *) mat_addr;
     // call to function in another .cpp file
-    return identify_chessboard(frame, reinterpret_cast<bool&>(mode_take_snapshot));
+    return camera_calibration.identify_chessboard(frame, reinterpret_cast<bool&>(mode_take_snapshot));
 }
 ```
 Explanation:
@@ -140,13 +140,15 @@ Explanation:
 * ```JNICALL``` contains any compiler directives required to ensure that the given function is treated with the proper calling convention.
 
 Now we can pass data between the CvCameraViewListener object and native functions in C++.
-It's probably best to create a separate .cpp file for JNI functions, and keep all OpenCV logic elsewhere. In this app, we have a camera-calibration.cpp and .h files that contain all our functions, and also a native-lib.cpp file that only communicates with CvCameraViewListener:
+It's probably best to create a separate .cpp file for JNI functions, and keep all OpenCV logic elsewhere. In this app, we have a ```CameraCalibration``` class in ```camera_calibration.cpp``` and ```.h``` files that contains all our functions, and also a ```native_lib.cpp``` file that only communicates with ```CvCameraViewListener```:
 ```cpp
 #include "camera_calibration.h"
 ```
-After we included the header file, we can call these functions from our native-lib file.
+After we included the header file, we can create an instance of this class as a global variable in ```native_lib``` file and call needed functions from this file:
 
 ```cpp
+CameraCalibration camera_calibration = CameraCalibration();
+
 extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_setSizes(
         JNIEnv *env, jobject instance, jlong mat_addr,
         jint board_width, jint board_height, jint passed_square_size) {
@@ -155,7 +157,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCamera
     Size passed_board_size(board_width, board_height);
     
     // call to function from camera-calibration.h
-    set_sizes(passed_board_size, frame.size(), passed_square_size);
+    camera_calibration.set_sizes(passed_board_size, frame.size(), passed_square_size);
 }
 ...
 
