@@ -52,7 +52,7 @@ The parameters of ```detectMarkers()``` are:
     ```
 * For each successful marker detection, the four corner points of the marker are detected, in order from top left, top right, bottom right and bottom left. In C++, these 4 detected corner points are stored as a vector of points and multiple markers in the image are together stored in a vector of vector of points:
     ```cpp
-    vector<vector<Point2f>> marker_corners;
+    vector<vector<Point2f> > marker_corners;
     ```
 * The successfully detected markers ids are stored in a vector:
     ```cpp
