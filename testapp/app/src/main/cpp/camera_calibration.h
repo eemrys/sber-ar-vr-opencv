@@ -15,26 +15,20 @@
 using namespace cv;
 using namespace std;
 
-namespace cameracalibration {
-
-    Size board_size = Size();
-
-    Size image_size = Size();
-
-    int square_size = 0;
-
-    vector<vector<Point2f>> image_points = vector<vector<Point2f>>();
-
+class CameraCalibration {
+private:
+    Size board_size;
+    Size image_size;
+    int square_size;
+    vector<vector<Point2f>> image_points;
+public:
+    CameraCalibration();
     void set_sizes(const Size& board, const Size& image, int square);
-
     int identify_chessboard(Mat& frame, bool mode_take_snapshot);
-
     void calc_board_corner_positions(vector<Point3f>& obj);
-
     vector<Mat> calibrate();
-
-    vector<double> detect_aruco_marker(Mat& frame, const Mat& matrix, const Mat& dist);
-}
+    static vector<double> detect_aruco_marker(Mat& frame, const Mat& matrix, const Mat& dist);
+};
 
 
 #endif //TESTAPP_CAMERA_CALIBRATION_H

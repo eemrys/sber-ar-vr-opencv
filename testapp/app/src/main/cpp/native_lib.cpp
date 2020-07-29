@@ -14,13 +14,17 @@
 
 using namespace std;
 using namespace cv;
-using namespace cameracalibration;
+
+CameraCalibration& get_camera_calibration() {
+    static CameraCalibration camera_calibration = CameraCalibration();
+    return camera_calibration;
+}
 
 extern "C" JNIEXPORT jint JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_identifyChessboard(
         JNIEnv *env, jobject instance, jlong mat_addr, jboolean mode_take_snapshot) {
 
     Mat& frame = *(Mat *) mat_addr;
-    return identify_chessboard(frame, reinterpret_cast<bool&>(mode_take_snapshot));
+    return get_camera_calibration().identify_chessboard(frame, reinterpret_cast<bool&>(mode_take_snapshot));
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_setSizes(
@@ -29,7 +33,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCamera
 
     Mat& frame = *(Mat *) mat_addr;
     Size passed_board_size(board_width, board_height);
-    set_sizes(passed_board_size, frame.size(), passed_square_size);
+    get_camera_calibration().set_sizes(passed_board_size, frame.size(), passed_square_size);
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCameraViewListener_calibrate(
@@ -38,7 +42,7 @@ extern "C" JNIEXPORT void JNICALL Java_com_example_testapp_screencamera_CvCamera
     Mat& matrix = *(Mat *) matrix_addr;
     Mat& dist = *(Mat *) dist_addr;
 
-    vector<Mat> results = calibrate();
+    vector<Mat> results = get_camera_calibration().calibrate();
 
     matrix = results[0];
     dist = results[1];
@@ -51,7 +55,7 @@ extern "C" JNIEXPORT jdoubleArray JNICALL Java_com_example_testapp_screenundisto
     Mat& matrix = *(Mat *) matrix_addr;
     Mat& dist = *(Mat *) dist_addr;
 
-    vector<double> results = detect_aruco_marker(frame, matrix, dist);
+    vector<double> results = CameraCalibration::detect_aruco_marker(frame, matrix, dist);
 
     jdoubleArray output = env->NewDoubleArray(results.size());
     env->SetDoubleArrayRegion(output, 0, results.size(), &results[0]);

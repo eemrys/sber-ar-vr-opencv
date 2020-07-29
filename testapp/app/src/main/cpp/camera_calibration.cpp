@@ -1,14 +1,19 @@
 #include "camera_calibration.h"
 
-#include <utility>
+CameraCalibration::CameraCalibration() {
+    board_size = Size();
+    image_size = Size();
+    square_size = 0;
+    image_points = vector<vector<Point2f>>();
+}
 
-void cameracalibration::set_sizes(const Size& board, const Size& image, int square) {
+void CameraCalibration::set_sizes(const Size& board, const Size& image, int square) {
     board_size = board;
     image_size = image;
     square_size = square;
 }
 
-int cameracalibration::identify_chessboard(Mat& frame, bool mode_take_snapshot) {
+int CameraCalibration::identify_chessboard(Mat& frame, bool mode_take_snapshot) {
 
     vector<Point2f> corners;
     corners.clear();
@@ -34,14 +39,14 @@ int cameracalibration::identify_chessboard(Mat& frame, bool mode_take_snapshot) 
     return image_points.size();
 }
 
-void cameracalibration::calc_board_corner_positions(vector<Point3f>& obj) {
+void CameraCalibration::calc_board_corner_positions(vector<Point3f>& obj) {
     obj.clear();
     for (int i = 0; i < board_size.height; ++i)
         for (int j = 0; j < board_size.width; ++j)
             obj.emplace_back(j * square_size, i * square_size, 0);
 }
 
-vector<Mat> cameracalibration::calibrate() {
+vector<Mat> CameraCalibration::calibrate() {
     float grid_width = (float)square_size * (board_size.width - 1.f);
 
     vector<vector<Point3f>> object_points(1);
@@ -60,7 +65,7 @@ vector<Mat> cameracalibration::calibrate() {
     return results;
 }
 
-vector<double> cameracalibration::detect_aruco_marker(Mat& frame, const Mat& matrix, const Mat& dist) {
+vector<double> CameraCalibration::detect_aruco_marker(Mat& frame, const Mat& matrix, const Mat& dist) {
     double distance_marker = 0;
     double distance_surface = 0;
     float marker_length = 0.05f;
