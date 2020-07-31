@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		EC1D2F1E24D218F00093CBAF /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC1D2F1D24D218F00093CBAF /* main.cpp */; };
+		EC29195324D2F8B4008C573A /* custom_stitcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC29195124D2F8B4008C573A /* custom_stitcher.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,8 @@
 /* Begin PBXFileReference section */
 		EC1D2F1A24D218F00093CBAF /* stitcherapp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = stitcherapp; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC1D2F1D24D218F00093CBAF /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		EC29195124D2F8B4008C573A /* custom_stitcher.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = custom_stitcher.cpp; sourceTree = "<group>"; };
+		EC29195224D2F8B4008C573A /* custom_stitcher.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = custom_stitcher.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +61,8 @@
 			isa = PBXGroup;
 			children = (
 				EC1D2F1D24D218F00093CBAF /* main.cpp */,
+				EC29195124D2F8B4008C573A /* custom_stitcher.cpp */,
+				EC29195224D2F8B4008C573A /* custom_stitcher.hpp */,
 			);
 			path = stitcherapp;
 			sourceTree = "<group>";
@@ -119,6 +124,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EC29195324D2F8B4008C573A /* custom_stitcher.cpp in Sources */,
 				EC1D2F1E24D218F00093CBAF /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
