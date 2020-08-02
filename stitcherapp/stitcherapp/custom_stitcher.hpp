@@ -12,12 +12,12 @@
 
 class ThreeImagesStitcher {
 private:
-    cv::Mat surf_detector(const cv::Mat& first_image, const cv::Mat& second_image);
-    cv::Mat stitch_left(const cv::Mat& left, const cv::Mat& right);
-    cv::Mat stitch_right(const cv::Mat& left, const cv::Mat& right);
+    cv::Mat1d surf_detector(const cv::Mat3b& first_image, const cv::Mat3b& second_image);
+    cv::Mat3b stitch_left(const cv::Mat3b& left, const cv::Mat3b& right);
+    cv::Mat3b stitch_right(const cv::Mat3b& left, const cv::Mat3b& right);
 public:
     ThreeImagesStitcher() {};
-    void stitch(const cv::Mat& image_left, const cv::Mat& image_middle, const cv::Mat& image_right);
+    void stitch(const cv::Mat3b& image_left, const cv::Mat3b& image_middle, const cv::Mat3b& image_right);
 };
 
 #endif

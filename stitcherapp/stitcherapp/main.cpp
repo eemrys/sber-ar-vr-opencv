@@ -41,9 +41,9 @@ cv::Mat GetSquareImage(const cv::Mat& img)
 }
 
 int main(int argc, char **argv) {
-    cv::Mat left = GetSquareImage(cv::imread("image1.jpg"));
-    cv::Mat middle = GetSquareImage(cv::imread("image2.jpg"));
-    cv::Mat right = GetSquareImage(cv::imread("image3.jpg"));
+    const cv::Mat3b left = cv::imread("image1.jpg");
+    const cv::Mat3b middle = cv::imread("image2.jpg");
+    const cv::Mat3b right = cv::imread("image3.jpg");
     ThreeImagesStitcher stitcher = ThreeImagesStitcher();
     stitcher.stitch(left, middle, right);
     return 0;
