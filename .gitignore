@@ -84,3 +84,5 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 .DS_Store
+stitcherapp/stitcherapp.xcodeproj/project.xcworkspace/xcuserdata/emrys.xcuserdatad/UserInterfaceState.xcuserstate
+

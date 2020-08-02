@@ -1,20 +1,32 @@
 #include <iostream>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include <opencv2/stitching.hpp>
 
 #include "custom_stitcher.hpp"
 
-cv::Mat1d ThreeImagesStitcher::surf_detector(const cv::Mat3b& first_image, const cv::Mat3b& second_image) {
+cv::Mat1d ThreeImagesStitcher::get_homography(const cv::Mat3b& first_image, const cv::Mat3b& second_image) {
    
-    const int min_hessian = 400;
-    cv::Ptr<cv::xfeatures2d::SURF> surf_detector = cv::xfeatures2d::SURF::create(min_hessian);
-    
     std::vector<cv::KeyPoint> keypoints1, keypoints2;
     cv::Mat1f descriptors1, descriptors2;
-    surf_detector->detectAndCompute(first_image, cv::Mat3b(), keypoints1, descriptors1);
-    surf_detector->detectAndCompute(second_image, cv::Mat3b(), keypoints2, descriptors2);
     
+    switch (detector_type) {
+        // surf
+        case 1: {
+            const int min_hessian = 400;
+            cv::Ptr<cv::xfeatures2d::SURF> surf_detector = cv::xfeatures2d::SURF::create(min_hessian);
+            surf_detector->detectAndCompute(first_image, cv::Mat3b(), keypoints1, descriptors1);
+            surf_detector->detectAndCompute(second_image, cv::Mat3b(), keypoints2, descriptors2);
+            break;
+        }
+        // sift
+        case 2: {
+            cv::Ptr<cv::SIFT> sift_detector = cv::SIFT::create();
+            sift_detector->detectAndCompute(first_image, cv::Mat3b(), keypoints1, descriptors1);
+            sift_detector->detectAndCompute(second_image, cv::Mat3b(), keypoints2, descriptors2);
+            break;
+        }
+    }
+        
     cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
     std::vector<std::vector<cv::DMatch> > knn_matches;
     matcher->knnMatch(descriptors1, descriptors2, knn_matches, 2);
@@ -45,7 +57,7 @@ cv::Mat3b ThreeImagesStitcher::stitch_left(const cv::Mat3b& left, const cv::Mat3
     // move image to the right (into frame)
     move_into_frame.at<double>(0,2) += left.cols;
     
-    const cv::Mat1d homography_matrix = surf_detector(left, right);
+    const cv::Mat1d homography_matrix = get_homography(left, right);
     const cv::Mat1d translation_matrix = move_into_frame * homography_matrix;
 
     cv::Mat3b image_stitch;
@@ -57,7 +69,7 @@ cv::Mat3b ThreeImagesStitcher::stitch_left(const cv::Mat3b& left, const cv::Mat3
 }
 
 cv::Mat3b ThreeImagesStitcher::stitch_right(const cv::Mat3b& left, const cv::Mat3b& right, const bool side_image) {
-    const cv::Mat1d homography_matrix = surf_detector(right, left);
+    const cv::Mat1d homography_matrix = get_homography(right, left);
     
     int width;
     //expand frame to show complete image if needed
@@ -76,10 +88,32 @@ cv::Mat3b ThreeImagesStitcher::stitch_right(const cv::Mat3b& left, const cv::Mat
 }
 
 
-void ThreeImagesStitcher::stitch(const cv::Mat3b& image_left, const cv::Mat3b& image_middle, const cv::Mat3b& image_right) {
+void ThreeImagesStitcher::stitch(const cv::Mat3b& image_left,
+                                 const cv::Mat3b& image_middle,
+                                 const cv::Mat3b& image_right,
+                                 const int mode) {
     
-    cv::Mat3b first_stitch = stitch_left(image_middle, image_right);
-    //cv::Rect clean_cut = cv::Rect(0, 0, first_stitch.cols*0.9, first_stitch.rows);
-    cv::Mat3b second_stitch = stitch_left(image_left, first_stitch);
-    cv::imwrite("resulting_image.jpg", second_stitch);
+    cv::Mat3b first_stitch, second_stitch;
+    switch (mode) {
+        // 1) stitch left, 2) stitch left
+        case 0: {
+            first_stitch = stitch_left(image_middle, image_right);
+            second_stitch = stitch_left(image_left, first_stitch);
+            break;
+        }
+        // 1) stitch left, 2) stitch right
+        case 1: {
+            first_stitch = stitch_left(image_left, image_middle);
+            second_stitch = stitch_right(first_stitch, image_right, true);
+            break;
+        }
+        // 1) stitch right, 2) stitch right
+        case 2: {
+            first_stitch = stitch_right(image_left, image_middle, false);
+            cv::Rect clean_cut = cv::Rect(0, 0, first_stitch.cols*0.9, first_stitch.rows);
+            second_stitch = stitch_right(first_stitch(clean_cut), image_right, true);
+            break;
+        }
+    }
+    cv::imwrite("resulting_pano_image.jpg", second_stitch);
 }

@@ -23,11 +23,16 @@ cv::Mat3b put_on_canvas(const cv::Mat3b& img, const int target_height)
 }
 
 int main(int argc, char **argv) {
-    const int target_height = 800;
+    //todo: enums
+    const int target_height = 800,
+    stitching_mode = 1,
+    detector = 0;
     const cv::Mat3b left = put_on_canvas(cv::imread("image1.jpg"), target_height);
     const cv::Mat3b middle = put_on_canvas(cv::imread("image2.jpg"), target_height);
     const cv::Mat3b right = put_on_canvas(cv::imread("image3.jpg"), target_height);
-    ThreeImagesStitcher stitcher = ThreeImagesStitcher();
-    stitcher.stitch(left, middle, right);
+    
+    ThreeImagesStitcher stitcher = ThreeImagesStitcher(detector);
+    stitcher.stitch(left, middle, right, stitching_mode);
+    
     return 0;
 }
