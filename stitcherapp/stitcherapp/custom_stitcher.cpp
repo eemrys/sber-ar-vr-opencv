@@ -19,7 +19,8 @@ cv::Mat1d ThreeImagesStitcher::surf_detector(const cv::Mat3b& first_image, const
     std::vector<std::vector<cv::DMatch> > knn_matches;
     matcher->knnMatch(descriptors1, descriptors2, knn_matches, 2);
    
-    //-- Filter matches using the Lowe's ratio test
+    // filter matches using the Lowe's ratio test
+    // todo : two-way filer
     const float ratio_thresh = 0.7f;
     std::vector<cv::DMatch> good_matches;
     for (size_t i = 0; i < knn_matches.size(); i++)
@@ -41,11 +42,12 @@ cv::Mat1d ThreeImagesStitcher::surf_detector(const cv::Mat3b& first_image, const
 
 cv::Mat3b ThreeImagesStitcher::stitch_left(const cv::Mat3b& left, const cv::Mat3b& right) {
     cv::Mat1d move_into_frame = cv::Mat::eye(3,3,CV_64F);
+    // move image to the right (into frame)
     move_into_frame.at<double>(0,2) += left.cols;
     
     const cv::Mat1d homography_matrix = surf_detector(left, right);
     const cv::Mat1d translation_matrix = move_into_frame * homography_matrix;
-    
+
     cv::Mat3b image_stitch;
     warpPerspective(left, image_stitch, translation_matrix, cv::Size(left.cols + right.cols, left.rows));
     cv::Mat3b half = image_stitch(cv::Rect(image_stitch.cols - right.cols, 0, right.cols, right.rows));
@@ -54,11 +56,19 @@ cv::Mat3b ThreeImagesStitcher::stitch_left(const cv::Mat3b& left, const cv::Mat3
     return image_stitch;
 }
 
-cv::Mat3b ThreeImagesStitcher::stitch_right(const cv::Mat3b& left, const cv::Mat3b& right) {
+cv::Mat3b ThreeImagesStitcher::stitch_right(const cv::Mat3b& left, const cv::Mat3b& right, const bool side_image) {
     const cv::Mat1d homography_matrix = surf_detector(right, left);
     
+    int width;
+    //expand frame to show complete image if needed
+    if (side_image) {
+        width = right.cols * 2;
+    } else {
+        width = right.cols;
+    }
+    
     cv::Mat3b image_stitch;
-    warpPerspective(right, image_stitch, homography_matrix, cv::Size(right.cols + left.cols, right.rows));
+    warpPerspective(right, image_stitch, homography_matrix, cv::Size(width + left.cols, right.rows));
     cv::Mat3b half = image_stitch(cv::Rect(0, 0, left.cols, left.rows));
     left.copyTo(half);
     
@@ -67,9 +77,9 @@ cv::Mat3b ThreeImagesStitcher::stitch_right(const cv::Mat3b& left, const cv::Mat
 
 
 void ThreeImagesStitcher::stitch(const cv::Mat3b& image_left, const cv::Mat3b& image_middle, const cv::Mat3b& image_right) {
-    cv::Mat3b first_stitch = stitch_right(image_left, image_middle);
-    cv::Rect clean_cut = cv::Rect(0, 0, first_stitch.cols*0.9, first_stitch.rows);
-    cv::Mat3b second_stitch = stitch_right(first_stitch(clean_cut), image_right);
-    cv::imshow("resulting pano image", second_stitch);
-    cv::waitKey(0);
+    
+    cv::Mat3b first_stitch = stitch_left(image_middle, image_right);
+    //cv::Rect clean_cut = cv::Rect(0, 0, first_stitch.cols*0.9, first_stitch.rows);
+    cv::Mat3b second_stitch = stitch_left(image_left, first_stitch);
+    cv::imwrite("resulting_image.jpg", second_stitch);
 }

@@ -8,42 +8,25 @@
 
 #include "custom_stitcher.hpp"
 
-cv::Mat GetSquareImage(const cv::Mat& img)
+// copying images onto a canvas with bigger height
+// (this way we can see the edges of the images after stitching)
+cv::Mat3b put_on_canvas(const cv::Mat3b& img, const int target_height)
 {
-    int width = img.cols,
-       height = img.rows;
+    const int width = img.cols,
+    height = img.rows;
+        
+    cv::Mat3b canvas = cv::Mat::zeros(target_height, width, img.type());
+    cv::Rect roi = cv::Rect(0, (target_height - height) / 2, width, height);
+    cv::resize(img, canvas(roi), roi.size());
 
-    int target_width = 500;
-    
-    cv::Mat square = cv::Mat::zeros( target_width, target_width, img.type() );
-
-    int max_dim = ( width >= height ) ? width : height;
-    float scale = ( ( float ) target_width ) / max_dim;
-    cv::Rect roi;
-    if ( width >= height )
-    {
-        roi.width = target_width;
-        roi.x = 0;
-        roi.height = height * scale;
-        roi.y = ( target_width - roi.height ) / 2;
-    }
-    else
-    {
-        roi.y = 0;
-        roi.height = target_width;
-        roi.width = width * scale;
-        roi.x = ( target_width - roi.width ) / 2;
-    }
-
-    cv::resize( img, square( roi ), roi.size() );
-
-    return square;
+    return canvas;
 }
 
 int main(int argc, char **argv) {
-    const cv::Mat3b left = cv::imread("image1.jpg");
-    const cv::Mat3b middle = cv::imread("image2.jpg");
-    const cv::Mat3b right = cv::imread("image3.jpg");
+    const int target_height = 800;
+    const cv::Mat3b left = put_on_canvas(cv::imread("image1.jpg"), target_height);
+    const cv::Mat3b middle = put_on_canvas(cv::imread("image2.jpg"), target_height);
+    const cv::Mat3b right = put_on_canvas(cv::imread("image3.jpg"), target_height);
     ThreeImagesStitcher stitcher = ThreeImagesStitcher();
     stitcher.stitch(left, middle, right);
     return 0;
