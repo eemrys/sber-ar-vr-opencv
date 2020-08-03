@@ -25,18 +25,35 @@ cv::Mat3b put_on_canvas(const cv::Mat3b& img, const int target_height)
 }
 
 int main(int argc, char **argv) {
-    if (argc < 7) {
-        std::cout << "not enough arguments\n";
+    cv::String keys =
+        "{@image1   |<none>| left image path}"
+        "{@image2   |<none>| middle image path}"
+        "{@image3   |<none>| right image path}"
+        "{@result   |<none>| resulting image path}"
+        "{@detector |2  | detector: 1 - ORB, 2 - SURF, 3 - SIFT}"
+        "{@mode     |2  | stitching mode: 1 - to left, 2 - to middle, 3 - to right}"
+        "{help ?    |   | print this message}";
+
+    cv::CommandLineParser parser(argc, argv, keys);
+    if (parser.has("help")) {
+        parser.printMessage();
         return 0;
     }
+
+    const cv::String left_path = parser.get<cv::String>(0),
+        middle_path = parser.get<cv::String>(1),
+        right_path = parser.get<cv::String>(2),
+        result_path = parser.get<cv::String>(3);
+    
+    const int detector = parser.get<int>(4),
+        stitching_mode = parser.get<int>(5);
+
+    if (!parser.check()) {
+        parser.printErrors();
+        return -1;
+    }
+    
     try {
-        std::string left_path = argv[1],
-            middle_path = argv[2],
-            right_path = argv[3],
-            result_path = argv[4];
-        const int detector = atoi(argv[5]),
-            stitching_mode = atoi(argv[6]);
-        
         if ((detector < 1) || (stitching_mode < 1) || (detector > 3) || (stitching_mode > 3)) {
             throw std::invalid_argument("invalid argument");
         }
@@ -44,9 +61,9 @@ int main(int argc, char **argv) {
             throw std::invalid_argument("ORB detector doesn't support this mode, please choose mode 2 or 3.");
         }
         
-        const cv::Mat3b left = cv::imread(left_path);
-        const cv::Mat3b middle = cv::imread(middle_path);
-        const cv::Mat3b right = cv::imread(right_path);
+        const cv::Mat3b left = cv::imread(left_path),
+            middle = cv::imread(middle_path),
+            right = cv::imread(right_path);
         
         const int target_height = std::max(std::max(left.rows, middle.rows), right.rows) * 2;
         
