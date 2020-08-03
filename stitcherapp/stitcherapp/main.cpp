@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
         if ((detector < 1) || (stitching_mode < 1) || (detector > 3) || (stitching_mode > 3)) {
             throw std::invalid_argument("invalid argument");
         }
-        if ((detector == 1) || (stitching_mode == 1)) {
+        if ((detector == 1) && (stitching_mode == 1)) {
             throw std::invalid_argument("ORB detector doesn't support this mode, please choose mode 2 or 3.");
         }
         
