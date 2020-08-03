@@ -25,28 +25,18 @@ cv::Mat1d ThreeImagesStitcher::get_homography(const cv::Mat3b& first_image, cons
         }
         // surf
         case 2: {
-            const int min_hessian = 400;
-            cv::Ptr<cv::xfeatures2d::SURF> surf_detector = cv::xfeatures2d::SURF::create(min_hessian);
+            cv::Ptr<cv::xfeatures2d::SURF> surf_detector = cv::xfeatures2d::SURF::create();
             surf_detector->detectAndCompute(first_image, cv::Mat3b(), keypoints1, descriptors1);
             surf_detector->detectAndCompute(second_image, cv::Mat3b(), keypoints2, descriptors2);
             break;
         }
         // sift
         case 3: {
-            // standart parameters
-            int nfeatures = 0,
-                nOctaveLayers = 3;
-            double edgeThreshold = 10,
-                sigma = 1.6;
-            
-            // modified parameter
-            double contrastThreshold = 0.01;
-
-            cv::Ptr<cv::SIFT> sift_detector = cv::SIFT::create(nfeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma);
+            cv::Ptr<cv::SIFT> sift_detector = cv::SIFT::create();
             sift_detector->detectAndCompute(first_image, cv::Mat3b(), keypoints1, descriptors1);
             sift_detector->detectAndCompute(second_image, cv::Mat3b(), keypoints2, descriptors2);
             
-            // alternative steps for SIFT (gives slightly better results in mode 1)
+            // alternative matcher for SIFT (gives slightly better results in mode 2)
             // cv::Ptr<cv::BFMatcher> bfmatcher = cv::BFMatcher::create(cv::NORM_L2, true);
             // bfmatcher->match(descriptors1, descriptors2, matches, cv::Mat());
             break;
