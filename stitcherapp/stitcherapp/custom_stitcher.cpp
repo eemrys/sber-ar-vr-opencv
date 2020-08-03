@@ -12,27 +12,27 @@ cv::Mat1d ThreeImagesStitcher::get_homography(const cv::Mat3b& first_image, cons
     
     switch (detector_type) {
         // orb
-        case 0: {
+        case 1: {
             cv::Mat1b descriptors1_orb, descriptors2_orb;
             cv::Ptr<cv::ORB> orb_detector = cv::ORB::create();
             orb_detector->detectAndCompute(first_image, cv::Mat3b(), keypoints1, descriptors1_orb);
             orb_detector->detectAndCompute(second_image, cv::Mat3b(), keypoints2, descriptors2_orb);
             // different matcher for ORB
             // "crossCheck = true" is the equivalent of the symmetric test below
-            cv::Ptr<cv::BFMatcher> bfmatcher = cv::BFMatcher::create(cv::NORM_HAMMING, true);
+            cv::Ptr<cv::BFMatcher> bfmatcher = cv::BFMatcher::create(cv::NORM_HAMMING2, true);
             bfmatcher->match(descriptors1_orb, descriptors2_orb, matches, cv::Mat());
             break;
         }
         // surf
-        case 1: {
-            const int min_hessian = 800;
+        case 2: {
+            const int min_hessian = 400;
             cv::Ptr<cv::xfeatures2d::SURF> surf_detector = cv::xfeatures2d::SURF::create(min_hessian);
             surf_detector->detectAndCompute(first_image, cv::Mat3b(), keypoints1, descriptors1);
             surf_detector->detectAndCompute(second_image, cv::Mat3b(), keypoints2, descriptors2);
             break;
         }
         // sift
-        case 2: {
+        case 3: {
             // standart parameters
             int nfeatures = 0,
                 nOctaveLayers = 3;
@@ -151,19 +151,19 @@ cv::Mat3b ThreeImagesStitcher::stitch(const cv::Mat3b& image_left,
     cv::Mat3b first_stitch, second_stitch;
     switch (mode) {
         // 1) stitch left, 2) stitch left
-        case 0: {
+        case 1: {
             first_stitch = stitch_left(image_middle, image_right);
             second_stitch = stitch_left(image_left, first_stitch);
             break;
         }
         // 1) stitch left, 2) stitch right
-        case 1: {
+        case 2: {
             first_stitch = stitch_left(image_left, image_middle);
             second_stitch = stitch_right(first_stitch, image_right, true);
             break;
         }
         // 1) stitch right, 2) stitch right
-        case 2: {
+        case 3: {
             first_stitch = stitch_right(image_left, image_middle, false);
             cv::Rect clean_cut = cv::Rect(0, 0, first_stitch.cols*0.9, first_stitch.rows);
             second_stitch = stitch_right(first_stitch(clean_cut), image_right, true);

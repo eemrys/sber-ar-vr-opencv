@@ -35,7 +35,7 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
-      useCustomWorkingDirectory = "YES"
+      useCustomWorkingDirectory = "NO"
       customWorkingDirectory = "/Users/emrys/Downloads"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
@@ -53,27 +53,23 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "&quot;image1.jpg&quot;"
+            argument = "/Users/emrys/Downloads/image1.jpg"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "&quot;image2.jpg&quot;"
+            argument = "/Users/emrys/Downloads/image2.jpg"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "&quot;image3.jpg&quot;"
+            argument = "/Users/emrys/Downloads/image3.jpg"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "&quot;result_pano.jpg&quot;"
+            argument = "/Users/emrys/Downloads/result.jpg"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "800"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "1"
+            argument = "2"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
