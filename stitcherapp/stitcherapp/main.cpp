@@ -9,7 +9,7 @@
 #include "custom_stitcher.hpp"
 
 // copying images onto a canvas with bigger height
-// (this way we can see the edges of the images after stitching)
+// (this way we can see more of the edges of the images after stitching)
 cv::Mat3b put_on_canvas(const cv::Mat3b& img, const int target_height)
 {
     const int width = img.cols,
@@ -23,16 +23,24 @@ cv::Mat3b put_on_canvas(const cv::Mat3b& img, const int target_height)
 }
 
 int main(int argc, char **argv) {
-    //todo: enums
-    const int target_height = 800,
-    stitching_mode = 1,
-    detector = 2;
-    const cv::Mat3b left = put_on_canvas(cv::imread("image1.jpg"), target_height);
-    const cv::Mat3b middle = put_on_canvas(cv::imread("image2.jpg"), target_height);
-    const cv::Mat3b right = put_on_canvas(cv::imread("image3.jpg"), target_height);
+
+    // todo: app arguments
+    std::string left_path = argv[1],
+        middle_path = argv[2],
+        right_path = argv[3],
+    result_path = argv[4];
+    const int target_height = atoi(argv[5]),
+        stitching_mode = atoi(argv[6]),
+        detector = atoi(argv[7]);
+    
+    const cv::Mat3b left = put_on_canvas(cv::imread(left_path), target_height);
+    const cv::Mat3b middle = put_on_canvas(cv::imread(middle_path), target_height);
+    const cv::Mat3b right = put_on_canvas(cv::imread(right_path), target_height);
     
     ThreeImagesStitcher stitcher = ThreeImagesStitcher(detector);
-    stitcher.stitch(left, middle, right, stitching_mode);
+    cv::Mat3b result = stitcher.stitch(left, middle, right, stitching_mode);
+    
+    cv::imwrite(result_path, result);
     
     return 0;
 }

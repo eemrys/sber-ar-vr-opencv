@@ -18,7 +18,7 @@ cv::Mat1d ThreeImagesStitcher::get_homography(const cv::Mat3b& first_image, cons
             orb_detector->detectAndCompute(first_image, cv::Mat3b(), keypoints1, descriptors1_orb);
             orb_detector->detectAndCompute(second_image, cv::Mat3b(), keypoints2, descriptors2_orb);
             // different matcher for ORB
-            // crossCheck = true is the equivalent of symmetric test below
+            // "crossCheck = true" is the equivalent of the symmetric test below
             cv::Ptr<cv::BFMatcher> bfmatcher = cv::BFMatcher::create(cv::NORM_HAMMING, true);
             bfmatcher->match(descriptors1_orb, descriptors2_orb, matches, cv::Mat());
             break;
@@ -45,6 +45,10 @@ cv::Mat1d ThreeImagesStitcher::get_homography(const cv::Mat3b& first_image, cons
             cv::Ptr<cv::SIFT> sift_detector = cv::SIFT::create(nfeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma);
             sift_detector->detectAndCompute(first_image, cv::Mat3b(), keypoints1, descriptors1);
             sift_detector->detectAndCompute(second_image, cv::Mat3b(), keypoints2, descriptors2);
+            
+            // alternative steps for SIFT (gives slightly better results in mode 1)
+            // cv::Ptr<cv::BFMatcher> bfmatcher = cv::BFMatcher::create(cv::NORM_L2, true);
+            // bfmatcher->match(descriptors1, descriptors2, matches, cv::Mat());
             break;
         }
     }
@@ -105,7 +109,7 @@ cv::Mat1d ThreeImagesStitcher::get_homography(const cv::Mat3b& first_image, cons
 
 cv::Mat3b ThreeImagesStitcher::stitch_left(const cv::Mat3b& left, const cv::Mat3b& right) {
     cv::Mat1d move_into_frame = cv::Mat::eye(3,3,CV_64F);
-    // move image to the right (into frame)
+    // move image to the right, otherwise it's partially out of frame
     move_into_frame.at<double>(0,2) += left.cols;
     
     const cv::Mat1d homography_matrix = get_homography(left, right);
@@ -139,7 +143,7 @@ cv::Mat3b ThreeImagesStitcher::stitch_right(const cv::Mat3b& left, const cv::Mat
 }
 
 
-void ThreeImagesStitcher::stitch(const cv::Mat3b& image_left,
+cv::Mat3b ThreeImagesStitcher::stitch(const cv::Mat3b& image_left,
                                  const cv::Mat3b& image_middle,
                                  const cv::Mat3b& image_right,
                                  const int mode) {
@@ -166,5 +170,5 @@ void ThreeImagesStitcher::stitch(const cv::Mat3b& image_left,
             break;
         }
     }
-    cv::imwrite("result.jpg", second_stitch);
+    return second_stitch;
 }

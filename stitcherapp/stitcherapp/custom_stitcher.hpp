@@ -18,7 +18,7 @@ private:
     cv::Mat3b stitch_right(const cv::Mat3b& left, const cv::Mat3b& right, const bool side_image);
 public:
     ThreeImagesStitcher(const int detector): detector_type(detector) {};
-    void stitch(const cv::Mat3b& image_left,
+    cv::Mat3b stitch(const cv::Mat3b& image_left,
                 const cv::Mat3b& image_middle,
                 const cv::Mat3b& image_right,
                 const int mode);
