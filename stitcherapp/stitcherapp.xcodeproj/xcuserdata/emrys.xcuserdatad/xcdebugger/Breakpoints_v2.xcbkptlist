@@ -7,22 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "15EC5CDB-8DCD-4F69-851D-E9F05622B5AF"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "stitcherapp/custom_stitcher.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
-            landmarkName = "ThreeImagesStitcher::get_homography(first_image, second_image)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "BAF921DF-ADF6-4037-9DD9-C581C4D0AF54"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -30,8 +14,8 @@
             filePath = "stitcherapp/custom_stitcher.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
+            startingLineNumber = "133"
+            endingLineNumber = "133"
             landmarkName = "ThreeImagesStitcher::stitch_right(left, right, side_image)"
             landmarkType = "7">
          </BreakpointContent>
@@ -46,8 +30,8 @@
             filePath = "stitcherapp/custom_stitcher.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "83"
-            endingLineNumber = "83"
+            startingLineNumber = "134"
+            endingLineNumber = "134"
             landmarkName = "ThreeImagesStitcher::stitch_right(left, right, side_image)"
             landmarkType = "7">
          </BreakpointContent>
@@ -62,8 +46,8 @@
             filePath = "stitcherapp/custom_stitcher.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "85"
-            endingLineNumber = "85"
+            startingLineNumber = "136"
+            endingLineNumber = "136"
             landmarkName = "ThreeImagesStitcher::stitch_right(left, right, side_image)"
             landmarkType = "7">
          </BreakpointContent>
@@ -78,8 +62,8 @@
             filePath = "stitcherapp/custom_stitcher.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
+            startingLineNumber = "124"
+            endingLineNumber = "124"
             landmarkName = "ThreeImagesStitcher::stitch_right(left, right, side_image)"
             landmarkType = "7">
          </BreakpointContent>
@@ -94,8 +78,8 @@
             filePath = "stitcherapp/custom_stitcher.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "84"
-            endingLineNumber = "84"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
             landmarkName = "ThreeImagesStitcher::stitch_right(left, right, side_image)"
             landmarkType = "7">
          </BreakpointContent>
@@ -110,8 +94,8 @@
             filePath = "stitcherapp/custom_stitcher.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "87"
-            endingLineNumber = "87"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
             landmarkName = "ThreeImagesStitcher::stitch_right(left, right, side_image)"
             landmarkType = "7">
          </BreakpointContent>
@@ -126,8 +110,8 @@
             filePath = "stitcherapp/custom_stitcher.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "72"
-            endingLineNumber = "72"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
             landmarkName = "ThreeImagesStitcher::stitch_right(left, right, side_image)"
             landmarkType = "7">
          </BreakpointContent>
@@ -142,8 +126,8 @@
             filePath = "stitcherapp/custom_stitcher.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
+            startingLineNumber = "126"
+            endingLineNumber = "126"
             landmarkName = "ThreeImagesStitcher::stitch_right(left, right, side_image)"
             landmarkType = "7">
          </BreakpointContent>
@@ -158,8 +142,8 @@
             filePath = "stitcherapp/custom_stitcher.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
+            startingLineNumber = "127"
+            endingLineNumber = "127"
             landmarkName = "ThreeImagesStitcher::stitch_right(left, right, side_image)"
             landmarkType = "7">
          </BreakpointContent>
@@ -174,8 +158,8 @@
             filePath = "stitcherapp/custom_stitcher.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
+            startingLineNumber = "129"
+            endingLineNumber = "129"
             landmarkName = "ThreeImagesStitcher::stitch_right(left, right, side_image)"
             landmarkType = "7">
          </BreakpointContent>
@@ -190,8 +174,8 @@
             filePath = "stitcherapp/custom_stitcher.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
+            startingLineNumber = "128"
+            endingLineNumber = "128"
             landmarkName = "ThreeImagesStitcher::stitch_right(left, right, side_image)"
             landmarkType = "7">
          </BreakpointContent>
@@ -206,8 +190,8 @@
             filePath = "stitcherapp/custom_stitcher.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
+            startingLineNumber = "130"
+            endingLineNumber = "130"
             landmarkName = "ThreeImagesStitcher::stitch_right(left, right, side_image)"
             landmarkType = "7">
          </BreakpointContent>
@@ -222,8 +206,8 @@
             filePath = "stitcherapp/custom_stitcher.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "81"
-            endingLineNumber = "81"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
             landmarkName = "ThreeImagesStitcher::stitch_right(left, right, side_image)"
             landmarkType = "7">
          </BreakpointContent>

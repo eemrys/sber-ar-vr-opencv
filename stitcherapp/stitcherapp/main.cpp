@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
     //todo: enums
     const int target_height = 800,
     stitching_mode = 1,
-    detector = 0;
+    detector = 2;
     const cv::Mat3b left = put_on_canvas(cv::imread("image1.jpg"), target_height);
     const cv::Mat3b middle = put_on_canvas(cv::imread("image2.jpg"), target_height);
     const cv::Mat3b right = put_on_canvas(cv::imread("image3.jpg"), target_height);

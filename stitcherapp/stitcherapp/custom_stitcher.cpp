@@ -8,11 +8,24 @@ cv::Mat1d ThreeImagesStitcher::get_homography(const cv::Mat3b& first_image, cons
    
     std::vector<cv::KeyPoint> keypoints1, keypoints2;
     cv::Mat1f descriptors1, descriptors2;
+    std::vector<cv::DMatch> matches;
     
     switch (detector_type) {
+        // orb
+        case 0: {
+            cv::Mat1b descriptors1_orb, descriptors2_orb;
+            cv::Ptr<cv::ORB> orb_detector = cv::ORB::create();
+            orb_detector->detectAndCompute(first_image, cv::Mat3b(), keypoints1, descriptors1_orb);
+            orb_detector->detectAndCompute(second_image, cv::Mat3b(), keypoints2, descriptors2_orb);
+            // different matcher for ORB
+            // crossCheck = true is the equivalent of symmetric test below
+            cv::Ptr<cv::BFMatcher> bfmatcher = cv::BFMatcher::create(cv::NORM_HAMMING, true);
+            bfmatcher->match(descriptors1_orb, descriptors2_orb, matches, cv::Mat());
+            break;
+        }
         // surf
         case 1: {
-            const int min_hessian = 400;
+            const int min_hessian = 800;
             cv::Ptr<cv::xfeatures2d::SURF> surf_detector = cv::xfeatures2d::SURF::create(min_hessian);
             surf_detector->detectAndCompute(first_image, cv::Mat3b(), keypoints1, descriptors1);
             surf_detector->detectAndCompute(second_image, cv::Mat3b(), keypoints2, descriptors2);
@@ -20,35 +33,73 @@ cv::Mat1d ThreeImagesStitcher::get_homography(const cv::Mat3b& first_image, cons
         }
         // sift
         case 2: {
-            cv::Ptr<cv::SIFT> sift_detector = cv::SIFT::create();
+            // standart parameters
+            int nfeatures = 0,
+                nOctaveLayers = 3;
+            double edgeThreshold = 10,
+                sigma = 1.6;
+            
+            // modified parameter
+            double contrastThreshold = 0.01;
+
+            cv::Ptr<cv::SIFT> sift_detector = cv::SIFT::create(nfeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma);
             sift_detector->detectAndCompute(first_image, cv::Mat3b(), keypoints1, descriptors1);
             sift_detector->detectAndCompute(second_image, cv::Mat3b(), keypoints2, descriptors2);
             break;
         }
     }
+    
+    // next steps for SIFT and SURF
+    if (detector_type != 0) {
+        std::vector<std::vector<cv::DMatch> > knn_matches_1, knn_matches_2;
+        cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
         
-    cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-    std::vector<std::vector<cv::DMatch> > knn_matches;
-    matcher->knnMatch(descriptors1, descriptors2, knn_matches, 2);
-   
-    // filter matches using the Lowe's ratio test
-    // todo : two-way filer
-    const float ratio_thresh = 0.7f;
-    std::vector<cv::DMatch> good_matches;
-    for (size_t i = 0; i < knn_matches.size(); i++)
-    {
-        if (knn_matches[i][0].distance < ratio_thresh * knn_matches[i][1].distance)
+        // matching in two directions
+        matcher->knnMatch(descriptors1, descriptors2, knn_matches_1, 2);
+        matcher->knnMatch(descriptors2, descriptors1, knn_matches_2, 2);
+
+        // filter each set of matches using the Lowe's ratio test
+        const float ratio_thresh = 0.7f;
+        std::vector<cv::DMatch> good_matches_1, good_matches_2;
+        
+        for (size_t i = 0; i < knn_matches_1.size(); i++)
         {
-            good_matches.push_back(knn_matches[i][0]);
+            if (knn_matches_1[i][0].distance < ratio_thresh * knn_matches_1[i][1].distance)
+            {
+                good_matches_1.push_back(knn_matches_1[i][0]);
+            }
+        }
+        
+        for (size_t i = 0; i < knn_matches_2.size(); i++)
+        {
+            if (knn_matches_2[i][0].distance < ratio_thresh * knn_matches_2[i][1].distance)
+            {
+                good_matches_2.push_back(knn_matches_2[i][0]);
+            }
+        }
+        
+        // symmetric test
+        for (int i = 0; i < good_matches_1.size(); i++)
+        {
+            for (int j = 0; j < good_matches_2.size(); j++)
+            {
+                // if for i-th query descriptor the j-th descriptor in the matcher's collection is the nearest and vice versa
+                if (good_matches_1[i].queryIdx == good_matches_2[j].trainIdx && good_matches_2[j].queryIdx == good_matches_1[i].trainIdx)
+                {
+                    // then we are keeping the match
+                    matches.push_back(cv::DMatch(good_matches_1[i].queryIdx, good_matches_1[i].trainIdx, good_matches_1[i].distance));
+                    break;
+                }
+            }
         }
     }
     
     std::vector<cv::Point2f> points1, points2;
-    for (size_t i = 0; i < good_matches.size(); i++) {
-        points1.push_back(keypoints1[good_matches[i].queryIdx].pt);
-        points2.push_back(keypoints2[good_matches[i].trainIdx].pt);
+    for (size_t i = 0; i < matches.size(); i++) {
+        points1.push_back(keypoints1[matches[i].queryIdx].pt);
+        points2.push_back(keypoints2[matches[i].trainIdx].pt);
     }
-
+    
     return cv::findHomography(points1, points2, cv::RANSAC);
 }
 
@@ -69,7 +120,7 @@ cv::Mat3b ThreeImagesStitcher::stitch_left(const cv::Mat3b& left, const cv::Mat3
 }
 
 cv::Mat3b ThreeImagesStitcher::stitch_right(const cv::Mat3b& left, const cv::Mat3b& right, const bool side_image) {
-    const cv::Mat1d homography_matrix = get_homography(right, left);
+    const cv::Mat1d homography_matrix = get_homography(left, right);
     
     int width;
     //expand frame to show complete image if needed
@@ -80,7 +131,7 @@ cv::Mat3b ThreeImagesStitcher::stitch_right(const cv::Mat3b& left, const cv::Mat
     }
     
     cv::Mat3b image_stitch;
-    warpPerspective(right, image_stitch, homography_matrix, cv::Size(width + left.cols, right.rows));
+    warpPerspective(right, image_stitch, homography_matrix.inv(), cv::Size(width + left.cols, right.rows));
     cv::Mat3b half = image_stitch(cv::Rect(0, 0, left.cols, left.rows));
     left.copyTo(half);
     
@@ -115,5 +166,5 @@ void ThreeImagesStitcher::stitch(const cv::Mat3b& image_left,
             break;
         }
     }
-    cv::imwrite("resulting_pano_image.jpg", second_stitch);
+    cv::imwrite("result.jpg", second_stitch);
 }
