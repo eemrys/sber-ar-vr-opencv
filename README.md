@@ -216,7 +216,7 @@ right.copyTo(half);
 ```
 The result:
 
-![image]()
+![image](https://i.ibb.co/XZkDh8r/left-stitch.jpg)
 
 Now let's try to warp and stitch the right image to the left one.
 
@@ -260,7 +260,7 @@ left.copyTo(half);
 
 The result:
 
-![image]()
+![image](https://i.ibb.co/HB2CJL5/right-stitch.jpg)
 
 # Results
 
