@@ -44,7 +44,7 @@ cv::Mat1d ThreeImagesStitcher::get_homography(const cv::Mat3b& first_image, cons
     }
     
     // next steps for SIFT and SURF
-    if (detector_type != 0) {
+    if (detector_type != 1) {
         std::vector<std::vector<cv::DMatch> > knn_matches_1, knn_matches_2;
         cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
         
