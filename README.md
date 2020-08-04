@@ -21,7 +21,7 @@ The algorithm of matching the features is pretty straightforward:
 3. We find the best matches among them. 
 In short, we found locations of some parts of an object in another cluttered image. This information is sufficient to find the object exactly on the trainImage. 
 
-OpenCV provides a module called "Feature Detection and Description" as part of their 2D Features Framework. There are several keypoint detectors implemented in OpenCV ( e.g. SIFT, SURF, and ORB).
+OpenCV provides a module called "Feature Detection and Description" as part of their 2D Features Framework. There are several keypoint detectors implemented in OpenCV (e.g. SIFT, SURF, and ORB).
 
 # Detectors
 
