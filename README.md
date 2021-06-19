@@ -25,6 +25,7 @@ where
 * (cx, cy) is a principal point that is usually at the image center
 * fx, fy are the focal lengths expressed in pixel units.
 
+
 The following figure illustrates the pinhole camera model
 
 ![model illustration](https://docs.opencv.org/2.4/_images/pinhole_camera_model.png)
